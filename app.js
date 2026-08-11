@@ -111,25 +111,64 @@ function setApiStatus(ok, text) {
   node.innerHTML = `<i></i> ${escapeHtml(text)}`;
 }
 
+function connectionErrorMessage() {
+  return navigator.onLine === false
+    ? "El dispositivo no tiene conexión a Internet."
+    : "No se pudo leer la respuesta del servidor. Reintentá en unos segundos.";
+}
+
+function responseDiagnostics(response, text) {
+  return {
+    status: response.status,
+    url: response.url,
+    contentType: response.headers.get("content-type") || "",
+    preview: text.slice(0, 200)
+  };
+}
+
+function logResponseDiagnostics(label, response, text) {
+  console.error(label, responseDiagnostics(response, text));
+}
+
+async function fetchApi(url, options) {
+  try {
+    return await fetch(url, options);
+  } catch (error) {
+    if (navigator.onLine === false) {
+      throw new Error("El dispositivo no tiene conexión a Internet.");
+    }
+    throw error;
+  }
+}
+
+async function parseApiResponse(response, text, label) {
+  if (!response.ok) {
+    logResponseDiagnostics(`${label}: respuesta HTTP no exitosa`, response, text);
+    throw new Error(connectionErrorMessage());
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    logResponseDiagnostics(`${label}: la respuesta no es JSON válido`, response, text);
+    throw new Error(connectionErrorMessage());
+  }
+}
+
 async function apiGet(action, params = {}) {
   const url = new URL(API_URL);
   url.searchParams.set("action", action);
   Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+  url.searchParams.set("_ts", Date.now().toString());
 
-  const response = await fetch(url.toString(), {
+  const response = await fetchApi(url.toString(), {
     method: "GET",
     cache: "no-store",
     redirect: "follow"
   });
 
   const text = await response.text();
-
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw new Error("La API no devolvió JSON. Revisá la publicación de Apps Script.");
-  }
+  const data = await parseApiResponse(response, text, `apiGet(${action})`);
 
   if (!data.ok) {
     throw new Error(data.error || "Error en la API.");
@@ -139,7 +178,7 @@ async function apiGet(action, params = {}) {
 }
 
 async function apiPost(payload) {
-  const response = await fetch(API_URL, {
+  const response = await fetchApi(`${API_URL}?_ts=${Date.now()}`, {
     method: "POST",
     headers: {
       "Content-Type": "text/plain;charset=utf-8"
@@ -149,13 +188,7 @@ async function apiPost(payload) {
   });
 
   const text = await response.text();
-
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw new Error("La API no devolvió JSON en el POST.");
-  }
+  const data = await parseApiResponse(response, text, `apiPost(${payload?.action || "sin action"})`);
 
   return data;
 }
@@ -225,6 +258,12 @@ function bindGlobalEvents() {
       if (event.key === "ArrowRight") tutorialNext();
       if (event.key === "ArrowLeft") tutorialPrev();
       if (event.key === "Escape") finishTutorial();
+    }
+  });
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted && $("#view-municipio")?.classList.contains("active")) {
+      loadMunicipal();
     }
   });
 }
@@ -1037,13 +1076,44 @@ function renderFakeQr(seed) {
    MUNICIPAL
    ============================================================ */
 
+function setMunicipalRefreshBusy(busy) {
+  const button = $("#refreshMunicipal");
+  if (!button) return;
+  button.disabled = busy;
+  button.textContent = busy ? "Actualizando…" : "Actualizar";
+}
+
+function renderEmptyMunicipalDetail() {
+  const detail = $("#municipalDetail");
+  if (!detail) return;
+  detail.innerHTML = `
+    <div class="empty-detail">
+      <div>⌁</div>
+      <h3>Seleccioná un trámite</h3>
+      <p>Acá vas a ver el expediente, la documentación declarada y las acciones de verificación.</p>
+    </div>
+  `;
+}
+
 async function loadMunicipal() {
   const wrap = $("#municipalTableWrap");
   wrap.innerHTML = `<div class="loading-box">Cargando trámites…</div>`;
+  setMunicipalRefreshBusy(true);
 
   try {
     const data = await apiGet("habilitaciones");
     state.municipal.habilitaciones = data.habilitaciones || [];
+
+    if (
+      state.municipal.selectedId &&
+      !state.municipal.habilitaciones.some((row) =>
+        String(row.IDHabilitacion) === String(state.municipal.selectedId)
+      )
+    ) {
+      state.municipal.selectedId = null;
+      renderEmptyMunicipalDetail();
+    }
+
     renderStatusFilters();
     renderMunicipalTable();
 
@@ -1054,6 +1124,8 @@ async function loadMunicipal() {
     console.error(error);
     wrap.innerHTML = `<div class="loading-box">No se pudieron cargar los trámites.</div>`;
     showToast(error.message, "error");
+  } finally {
+    setMunicipalRefreshBusy(false);
   }
 }
 
