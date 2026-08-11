@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#21124d" />
+  <title>Habilitá Fácil — Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- =========================================================
+       TUTORIAL / ONBOARDING
+       ========================================================= -->
+  <section id="tutorialOverlay" class="tutorial-overlay hidden" aria-label="Tutorial">
+    <div class="tutorial-shell">
+      <button id="tutorialSkip" class="tutorial-skip" type="button">Saltar</button>
+
+      <div id="tutorialTrack" class="tutorial-track">
+        <article class="tutorial-slide active" data-slide="0">
+          <div class="tutorial-art">
+            <div class="art-orbit"></div>
+            <div class="art-icon">⚡</div>
+          </div>
+          <span class="eyebrow">HABILITÁ FÁCIL</span>
+          <h1>Abrí tu comercio <em>hoy</em>.</h1>
+          <p>Un trámite digital simple, pensado para dejar atrás semanas de espera y formularios innecesarios.</p>
+        </article>
+
+        <article class="tutorial-slide" data-slide="1">
+          <div class="tutorial-art">
+            <div class="art-orbit"></div>
+            <div class="art-icon">✓</div>
+          </div>
+          <span class="eyebrow">PASO 1</span>
+          <h1>Declarás lo <em>indispensable</em>.</h1>
+          <p>Elegís tu actividad, cargás los datos básicos y el sistema te pide solamente lo que corresponde.</p>
+        </article>
+
+        <article class="tutorial-slide" data-slide="2">
+          <div class="tutorial-art">
+            <div class="art-orbit"></div>
+            <div class="art-icon">▣</div>
+          </div>
+          <span class="eyebrow">PASO 2</span>
+          <h1>Presentás todo <em>online</em>.</h1>
+          <p>Adjuntás la documentación requerida y completás una declaración jurada digital.</p>
+        </article>
+
+        <article class="tutorial-slide" data-slide="3">
+          <div class="tutorial-art success">
+            <div class="art-orbit"></div>
+            <div class="art-icon">✓</div>
+          </div>
+          <span class="eyebrow">PASO 3</span>
+          <h1>Te habilitás. El Municipio <em>verifica después</em>.</h1>
+          <p>Si la actividad admite habilitación inmediata, recibís tu certificado digital y podés comenzar a trabajar.</p>
+        </article>
+      </div>
+
+      <div class="tutorial-footer">
+        <button id="tutorialPrev" class="icon-btn ghost" type="button" aria-label="Anterior">←</button>
+        <div id="tutorialDots" class="tutorial-dots" aria-label="Progreso"></div>
+        <button id="tutorialNext" class="btn primary tutorial-next" type="button">Siguiente</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       APP
+       ========================================================= -->
+  <div id="appShell" class="app-shell">
+    <header class="topbar">
+      <button class="brand" type="button" data-go="home" aria-label="Inicio">
+        <span class="brand-mark">HF</span>
+        <span class="brand-name">Habilitá <em>Fácil</em></span>
+      </button>
+
+      <nav class="topnav" aria-label="Navegación principal">
+        <button class="nav-link active" type="button" data-go="home">Inicio</button>
+        <button class="nav-link" type="button" data-go="wizard">Nueva habilitación</button>
+        <button class="nav-link" type="button" data-go="municipio">Panel municipal</button>
+      </nav>
+
+      <div class="top-actions">
+        <span id="apiStatus" class="api-status"><i></i> Conectando…</span>
+        <button id="replayTutorial" class="icon-btn" type="button" title="Ver tutorial">?</button>
+      </div>
+    </header>
+
+    <main id="mainContent">
+      <!-- =====================================================
+           HOME
+           ===================================================== -->
+      <section id="view-home" class="view active">
+        <div class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow light">HABILITACIÓN DIGITAL INMEDIATA</span>
+            <h1>Abrir un comercio no debería llevar <em>meses</em>.</h1>
+            <p class="hero-lead">
+              Presentá lo mínimo necesario, completá tu declaración jurada y obtené una habilitación digital inmediata,
+              sujeta a verificación municipal posterior.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn yellow big" type="button" data-go="wizard">
+                Iniciar habilitación
+                <span>→</span>
+              </button>
+              <button class="btn white-outline big" type="button" data-go="municipio">
+                Ver panel municipal
+              </button>
+            </div>
+
+            <div class="hero-points">
+              <div><span>✓</span> Menos requisitos</div>
+              <div><span>✓</span> Sin turnos presenciales</div>
+              <div><span>✓</span> Control posterior</div>
+            </div>
+          </div>
+
+          <div class="hero-device-wrap" aria-hidden="true">
+            <div class="hero-glow"></div>
+            <div class="phone">
+              <div class="phone-notch"></div>
+              <div class="phone-head">
+                <span>Habilitá <em>Fácil</em></span>
+                <b>☰</b>
+              </div>
+              <div class="phone-screen">
+                <div class="store-illustration">
+                  <div class="store-awning">
+                    <i></i><i></i><i></i><i></i><i></i>
+                  </div>
+                  <div class="store-body">
+                    <div class="store-window"></div>
+                    <div class="store-door"></div>
+                    <div class="store-window"></div>
+                  </div>
+                </div>
+                <h3>¡Bienvenido!</h3>
+                <p>Iniciá tu habilitación en pocos pasos.</p>
+                <div class="mini-btn purple">Nueva habilitación</div>
+                <div class="mini-btn">Mis trámites</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="how-section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">¿CÓMO FUNCIONA?</span>
+              <h2>Del trámite a la habilitación en pocos pasos.</h2>
+            </div>
+            <p>La simplificación no elimina el control: cambia el momento en que se realiza.</p>
+          </div>
+
+          <div class="how-grid">
+            <article class="how-card">
+              <span class="how-number">1</span>
+              <div class="how-icon">⌂</div>
+              <h3>Elegí tu actividad</h3>
+              <p>El sistema determina automáticamente qué corresponde pedirte.</p>
+            </article>
+            <article class="how-card">
+              <span class="how-number">2</span>
+              <div class="how-icon">☑</div>
+              <h3>Completá los datos</h3>
+              <p>Información básica del titular y del local. Nada de formularios eternos.</p>
+            </article>
+            <article class="how-card">
+              <span class="how-number">3</span>
+              <div class="how-icon">⇧</div>
+              <h3>Adjuntá y declarÁ</h3>
+              <p>Documentación mínima + declaración jurada digital.</p>
+            </article>
+            <article class="how-card featured">
+              <span class="how-number">4</span>
+              <div class="how-icon">✓</div>
+              <h3>Quedás habilitado</h3>
+              <p>Recibís tu habilitación provisoria. El Municipio verifica posteriormente.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="principle-card">
+          <div class="principle-icon">★</div>
+          <div>
+            <span class="eyebrow">EL PRINCIPIO</span>
+            <h2>Menos permiso previo. Más fiscalización inteligente.</h2>
+            <p>
+              Una tienda de ropa no necesita el mismo procedimiento que una actividad de alto riesgo.
+              La demo clasifica actividades y aplica reglas simples según cada caso.
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <!-- =====================================================
+           WIZARD CIUDADANO
+           ===================================================== -->
+      <section id="view-wizard" class="view">
+        <div class="wizard-page">
+          <div class="wizard-top">
+            <button id="wizardExit" class="back-link" type="button">← Volver al inicio</button>
+            <div>
+              <span class="eyebrow">EXPERIENCIA DEL EMPRENDEDOR</span>
+              <h2>Nueva habilitación</h2>
+            </div>
+            <span class="demo-pill">DEMO</span>
+          </div>
+
+          <div class="wizard-layout">
+            <aside class="wizard-sidebar">
+              <div class="progress-ring">
+                <svg viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="43"></circle>
+                  <circle id="progressRingValue" class="value" cx="50" cy="50" r="43"></circle>
+                </svg>
+                <strong id="progressPercent">20%</strong>
+              </div>
+              <div>
+                <span class="muted-label">TU TRÁMITE</span>
+                <h3 id="sideTitle">Elegí tu actividad</h3>
+                <p id="sideHint">Respondé solamente lo necesario para tu tipo de comercio.</p>
+              </div>
+              <div id="wizardSteps" class="step-list"></div>
+            </aside>
+
+            <div class="wizard-card">
+              <div id="wizardContent"></div>
+              <div class="wizard-actions">
+                <button id="wizardBack" class="btn secondary" type="button">Atrás</button>
+                <button id="wizardNext" class="btn primary" type="button">Continuar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           CERTIFICADO
+           ===================================================== -->
+      <section id="view-certificate" class="view">
+        <div class="certificate-page">
+          <button class="back-link no-print" type="button" data-go="home">← Volver al inicio</button>
+
+          <div class="success-banner">
+            <div class="success-check">✓</div>
+            <div>
+              <span class="eyebrow">TRÁMITE COMPLETADO</span>
+              <h1>Tu local ya está habilitado.</h1>
+              <p>La habilitación tiene carácter provisorio y queda sujeta a verificación municipal posterior.</p>
+            </div>
+          </div>
+
+          <article id="certificateCard" class="certificate-card">
+            <div class="certificate-head">
+              <div class="brand certificate-brand">
+                <span class="brand-mark">HF</span>
+                <span class="brand-name">Habilitá <em>Fácil</em></span>
+              </div>
+              <span class="certificate-badge">HABILITACIÓN DIGITAL</span>
+            </div>
+
+            <div class="certificate-status">
+              <span class="status-dot"></span>
+              <div>
+                <small>ESTADO</small>
+                <strong>HABILITADO PROVISORIAMENTE</strong>
+                <p>Sujeto a verificación municipal posterior</p>
+              </div>
+            </div>
+
+            <div class="certificate-grid">
+              <div>
+                <small>NÚMERO DE HABILITACIÓN</small>
+                <strong id="certNumber">—</strong>
+              </div>
+              <div>
+                <small>FECHA DE EMISIÓN</small>
+                <strong id="certDate">—</strong>
+              </div>
+              <div>
+                <small>NOMBRE COMERCIAL</small>
+                <strong id="certBusiness">—</strong>
+              </div>
+              <div>
+                <small>TITULAR</small>
+                <strong id="certHolder">—</strong>
+              </div>
+              <div class="span-2">
+                <small>ACTIVIDAD</small>
+                <strong id="certActivity">—</strong>
+              </div>
+              <div class="span-2">
+                <small>DOMICILIO DEL LOCAL</small>
+                <strong id="certAddress">—</strong>
+              </div>
+            </div>
+
+            <div class="certificate-bottom">
+              <div>
+                <small>VERIFICACIÓN</small>
+                <p>
+                  El Municipio podrá verificar la información declarada y la documentación presentada.
+                  La falsedad u omisión de datos puede dar lugar a observación, suspensión o revocación.
+                </p>
+              </div>
+              <div class="qr-demo">
+                <div id="qrGrid" class="qr-grid"></div>
+                <small>QR DEMO</small>
+              </div>
+            </div>
+          </article>
+
+          <div class="certificate-actions no-print">
+            <button id="printCertificate" class="btn primary big" type="button">Imprimir / Guardar PDF</button>
+            <button class="btn secondary big" type="button" data-go="municipio">Verlo en el panel municipal</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           PANEL MUNICIPAL
+           ===================================================== -->
+      <section id="view-municipio" class="view">
+        <div class="municipal-shell">
+          <aside class="municipal-sidebar">
+            <div class="municipal-brand">
+              <span class="brand-mark">HF</span>
+              <div>
+                <strong>Habilitá <em>Fácil</em></strong>
+                <small>Panel Municipal</small>
+              </div>
+            </div>
+
+            <nav>
+              <button class="muni-nav active" type="button"><span>▦</span> Trámites</button>
+              <button class="muni-nav" type="button"><span>⌕</span> Verificaciones</button>
+              <button class="muni-nav" type="button"><span>✓</span> Habilitaciones</button>
+              <button class="muni-nav" type="button"><span>↗</span> Reportes</button>
+            </nav>
+
+            <div class="municipal-side-note">
+              <span>DEMO</span>
+              <p>Control posterior basado en riesgo y trazabilidad digital.</p>
+            </div>
+          </aside>
+
+          <div class="municipal-main">
+            <header class="municipal-topbar">
+              <div>
+                <button class="municipal-home-link" type="button" data-go="home">
+                  <span>←</span>
+                  Volver al inicio
+                </button>
+                <span class="eyebrow">EXPERIENCIA DEL MUNICIPIO</span>
+                <h2>Trámites recibidos</h2>
+              </div>
+              <div class="admin-chip">● Admin Demo</div>
+            </header>
+
+            <div class="municipal-filters">
+              <label class="search-box">
+                <span>⌕</span>
+                <input id="municipalSearch" type="search" placeholder="Buscar expediente o comercio..." />
+              </label>
+              <div id="statusFilters" class="filter-chips"></div>
+              <button id="refreshMunicipal" class="btn secondary compact" type="button">Actualizar</button>
+            </div>
+
+            <div class="municipal-grid">
+              <div class="table-card">
+                <div id="municipalTableWrap" class="table-wrap">
+                  <div class="loading-box">Cargando trámites…</div>
+                </div>
+              </div>
+
+              <aside id="municipalDetail" class="detail-card">
+                <div class="empty-detail">
+                  <div>⌁</div>
+                  <h3>Seleccioná un trámite</h3>
+                  <p>Acá vas a ver el expediente, la documentación declarada y las acciones de verificación.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="footer-brand">
+        <strong>Habilitá Fácil</strong>
+        <span>Demo conceptual · Santa Fe 2026</span>
+      </div>
+      <div class="footer-credits" aria-label="Créditos del proyecto">
+        <a href="https://www.instagram.com/martinjacotlla/"
+           target="_blank"
+           rel="noopener noreferrer">
+          Idea: Martín Jacot
+          <span>@martinjacotlla ↗</span>
+        </a>
+        <a href="https://ehenquin.github.io/LinkTreePro/"
+           target="_blank"
+           rel="noopener noreferrer">
+          Realización: Dr. Eduardo Henquín
+          <span>↗</span>
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status"></div>
+
+  <!-- Modal -->
+  <div id="modalBackdrop" class="modal-backdrop hidden">
+    <div class="modal">
+      <button id="modalClose" class="modal-close" type="button">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
