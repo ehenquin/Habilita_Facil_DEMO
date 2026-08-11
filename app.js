@@ -6,7 +6,164 @@
 const API_URL =
   "https://script.google.com/macros/s/AKfycbzvWJRX1VtUcqOB_UIPLRo-boxumBae3CPjPHLSrhhUnKV9qF8O7rTQJQVNEBUg4nPJ/exec";
 
-const TUTORIAL_KEY = "habilita_facil_demo_tutorial_v1";
+const DEMO_FAST_MODE = true;
+const DEMO_STORE_KEY = "habilita_facil_demo_data_v1";
+
+const DEMO_BOOTSTRAP = {
+  actividades: [
+    {
+      IDActividad: "ACT-001",
+      Categoria: "Comercio",
+      Actividad: "Venta minorista de indumentaria",
+      NivelRiesgo: "BAJO",
+      HabilitacionInmediata: "SI",
+      RequiereInspeccionPrevia: "NO",
+      Activa: "SI"
+    },
+    {
+      IDActividad: "ACT-002",
+      Categoria: "Servicios",
+      Actividad: "Oficina / estudio profesional",
+      NivelRiesgo: "BAJO",
+      HabilitacionInmediata: "SI",
+      RequiereInspeccionPrevia: "NO",
+      Activa: "SI"
+    },
+    {
+      IDActividad: "ACT-003",
+      Categoria: "Comercio",
+      Actividad: "Kiosco / minimercado",
+      NivelRiesgo: "MEDIO",
+      HabilitacionInmediata: "SI",
+      RequiereInspeccionPrevia: "NO",
+      Activa: "SI"
+    },
+    {
+      IDActividad: "ACT-004",
+      Categoria: "Gastronomía",
+      Actividad: "Cafetería / elaboración simple de alimentos",
+      NivelRiesgo: "MEDIO",
+      HabilitacionInmediata: "SI",
+      RequiereInspeccionPrevia: "NO",
+      Activa: "SI"
+    },
+    {
+      IDActividad: "ACT-005",
+      Categoria: "Servicios",
+      Actividad: "Peluquería / barbería",
+      NivelRiesgo: "MEDIO",
+      HabilitacionInmediata: "SI",
+      RequiereInspeccionPrevia: "NO",
+      Activa: "SI"
+    },
+    {
+      IDActividad: "ACT-006",
+      Categoria: "Especial",
+      Actividad: "Actividad de riesgo alto",
+      NivelRiesgo: "ALTO",
+      HabilitacionInmediata: "NO",
+      RequiereInspeccionPrevia: "SI",
+      Activa: "SI"
+    }
+  ],
+  requisitos: [
+    { IDRequisito: "REQ-001", IDActividad: "ACT-001", TipoDocumento: "DNI", Descripcion: "Documento de identidad del titular", Obligatorio: "SI", Momento: "INICIO" },
+    { IDRequisito: "REQ-002", IDActividad: "ACT-001", TipoDocumento: "Constancia CUIT", Descripcion: "Constancia fiscal vigente", Obligatorio: "SI", Momento: "INICIO" },
+    { IDRequisito: "REQ-003", IDActividad: "ACT-003", TipoDocumento: "DNI", Descripcion: "Documento de identidad del titular", Obligatorio: "SI", Momento: "INICIO" },
+    { IDRequisito: "REQ-004", IDActividad: "ACT-003", TipoDocumento: "Constancia CUIT", Descripcion: "Constancia fiscal vigente", Obligatorio: "SI", Momento: "INICIO" },
+    { IDRequisito: "REQ-005", IDActividad: "ACT-004", TipoDocumento: "DNI", Descripcion: "Documento de identidad del titular", Obligatorio: "SI", Momento: "INICIO" },
+    { IDRequisito: "REQ-006", IDActividad: "ACT-004", TipoDocumento: "Constancia CUIT", Descripcion: "Constancia fiscal vigente", Obligatorio: "SI", Momento: "INICIO" },
+    { IDRequisito: "REQ-007", IDActividad: "ACT-004", TipoDocumento: "Carnet manipulador", Descripcion: "Carnet de manipulación de alimentos", Obligatorio: "SI", Momento: "INICIO" },
+    { IDRequisito: "REQ-008", IDActividad: "ACT-005", TipoDocumento: "DNI", Descripcion: "Documento de identidad del titular", Obligatorio: "SI", Momento: "INICIO" },
+    { IDRequisito: "REQ-009", IDActividad: "ACT-005", TipoDocumento: "Constancia CUIT", Descripcion: "Constancia fiscal vigente", Obligatorio: "SI", Momento: "INICIO" }
+  ],
+  preguntas: [
+    {
+      IDPregunta: "PRE-001",
+      AplicaCategoria: "TODAS",
+      TextoPregunta: "¿El domicilio declarado corresponde al local donde desarrollarás la actividad?",
+      RespuestaCompatible: "SI",
+      SiNoCumple: "BLOQUEAR",
+      Activa: "SI",
+      Orden: 1
+    },
+    {
+      IDPregunta: "PRE-002",
+      AplicaCategoria: "TODAS",
+      TextoPregunta: "¿El local cuenta con condiciones básicas de seguridad y evacuación?",
+      RespuestaCompatible: "SI",
+      SiNoCumple: "OBSERVAR",
+      Activa: "SI",
+      Orden: 2
+    },
+    {
+      IDPregunta: "PRE-003",
+      AplicaCategoria: "Gastronomía",
+      TextoPregunta: "¿Vas a elaborar o manipular alimentos en el local?",
+      RespuestaCompatible: "SI",
+      SiNoCumple: "OBSERVAR",
+      Activa: "SI",
+      Orden: 3
+    },
+    {
+      IDPregunta: "PRE-004",
+      AplicaCategoria: "Gastronomía",
+      TextoPregunta: "¿El establecimiento cuenta con provisión de agua y condiciones higiénicas adecuadas?",
+      RespuestaCompatible: "SI",
+      SiNoCumple: "OBSERVAR",
+      Activa: "SI",
+      Orden: 4
+    },
+    {
+      IDPregunta: "PRE-005",
+      AplicaCategoria: "Comercio",
+      TextoPregunta: "¿La actividad se desarrollará íntegramente dentro del local declarado?",
+      RespuestaCompatible: "SI",
+      SiNoCumple: "OBSERVAR",
+      Activa: "SI",
+      Orden: 5
+    }
+  ]
+};
+
+const DEMO_SEED_HABILITACIONES = [
+  {
+    IDHabilitacion: "HAB-000241",
+    NumeroHabilitacion: "HR-DEMO-2026-000241",
+    FechaSolicitud: "2026-08-10T10:20:00",
+    FechaHabilitacion: "2026-08-10T10:25:00",
+    NombreFantasia: "La Esquina",
+    DomicilioLocal: "San Martín 1240, Santa Fe",
+    IDActividad: "ACT-003",
+    NivelRiesgo: "MEDIO",
+    Estado: "HABILITADO_PROVISORIO",
+    source: "LOCAL_DEMO"
+  },
+  {
+    IDHabilitacion: "HAB-000242",
+    NumeroHabilitacion: "HR-DEMO-2026-000242",
+    FechaSolicitud: "2026-08-10T11:05:00",
+    FechaHabilitacion: "2026-08-10T11:09:00",
+    NombreFantasia: "Estudio Norte",
+    DomicilioLocal: "Bv. Gálvez 1830, Santa Fe",
+    IDActividad: "ACT-002",
+    NivelRiesgo: "BAJO",
+    Estado: "HABILITADO_PROVISORIO",
+    source: "LOCAL_DEMO"
+  },
+  {
+    IDHabilitacion: "HAB-000243",
+    NumeroHabilitacion: "HR-DEMO-2026-000243",
+    FechaSolicitud: "2026-08-10T12:40:00",
+    FechaHabilitacion: "2026-08-10T12:48:00",
+    NombreFantasia: "Café del Centro",
+    DomicilioLocal: "Mendoza 2520, Santa Fe",
+    IDActividad: "ACT-004",
+    NivelRiesgo: "MEDIO",
+    Estado: "HABILITADO_PROVISORIO",
+    source: "LOCAL_DEMO"
+  }
+];
 
 const state = {
   bootstrap: {
@@ -131,13 +288,25 @@ function logResponseDiagnostics(label, response, text) {
 }
 
 async function fetchApi(url, options) {
+  const controller = DEMO_FAST_MODE && "AbortController" in window
+    ? new AbortController()
+    : null;
+  const timeout = controller
+    ? setTimeout(() => controller.abort(), 3500)
+    : null;
+
   try {
-    return await fetch(url, options);
+    return await fetch(url, {
+      ...options,
+      ...(controller ? { signal: controller.signal } : {})
+    });
   } catch (error) {
     if (navigator.onLine === false) {
       throw new Error("El dispositivo no tiene conexión a Internet.");
     }
     throw error;
+  } finally {
+    if (timeout) clearTimeout(timeout);
   }
 }
 
@@ -193,6 +362,343 @@ async function apiPost(payload) {
   return data;
 }
 
+function demoWarn(message, error) {
+  console.warn(message, error);
+  setApiStatus(false, "Modo demo · sincronización pendiente");
+}
+
+function demoStoreDefaults() {
+  const titulares = {
+    "TIT-SEED-000241": { IDTitular: "TIT-SEED-000241", NombreApellido: "Lucía Gómez", CUIT: "27-30111222-4", Email: "lucia@example.com", Telefono: "342 555 0101", DomicilioReal: "San Martín 1200, Santa Fe" },
+    "TIT-SEED-000242": { IDTitular: "TIT-SEED-000242", NombreApellido: "Martín Ríos", CUIT: "20-28777888-2", Email: "martin@example.com", Telefono: "342 555 0102", DomicilioReal: "Bv. Gálvez 1800, Santa Fe" },
+    "TIT-SEED-000243": { IDTitular: "TIT-SEED-000243", NombreApellido: "Carolina Pérez", CUIT: "27-33555666-8", Email: "carolina@example.com", Telefono: "342 555 0103", DomicilioReal: "Mendoza 2500, Santa Fe" }
+  };
+
+  return {
+    titulares,
+    habilitaciones: DEMO_SEED_HABILITACIONES.map((row, index) => ({
+      ...row,
+      IDTitular: Object.keys(titulares)[index],
+      syncPending: false,
+      seed: true
+    })),
+    documentos: {
+      "HAB-000241": [
+        { TipoDocumento: "DNI", NombreArchivo: "dni_la_esquina.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/dni_la_esquina.pdf" },
+        { TipoDocumento: "Constancia CUIT", NombreArchivo: "cuit_la_esquina.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/cuit_la_esquina.pdf" }
+      ],
+      "HAB-000242": [],
+      "HAB-000243": [
+        { TipoDocumento: "DNI", NombreArchivo: "dni_cafe_centro.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/dni_cafe_centro.pdf" },
+        { TipoDocumento: "Constancia CUIT", NombreArchivo: "cuit_cafe_centro.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/cuit_cafe_centro.pdf" },
+        { TipoDocumento: "Carnet manipulador", NombreArchivo: "carnet_cafe_centro.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/carnet_cafe_centro.pdf" }
+      ]
+    },
+    respuestas: {},
+    verificaciones: {},
+    syncPending: false
+  };
+}
+
+function normalizeDemoStore(store) {
+  const defaults = demoStoreDefaults();
+  return {
+    titulares: store?.titulares || defaults.titulares,
+    habilitaciones: store?.habilitaciones || defaults.habilitaciones,
+    documentos: store?.documentos || defaults.documentos,
+    respuestas: store?.respuestas || defaults.respuestas,
+    verificaciones: store?.verificaciones || defaults.verificaciones,
+    syncPending: Boolean(store?.syncPending)
+  };
+}
+
+function loadDemoStore() {
+  try {
+    const raw = localStorage.getItem(DEMO_STORE_KEY);
+    if (!raw) return demoStoreDefaults();
+    return normalizeDemoStore(JSON.parse(raw));
+  } catch (error) {
+    console.warn("No se pudo leer el store demo. Se reinicia con datos mínimos.", error);
+    return demoStoreDefaults();
+  }
+}
+
+function saveDemoStore(store) {
+  localStorage.setItem(DEMO_STORE_KEY, JSON.stringify(normalizeDemoStore(store)));
+}
+
+function markDemoSyncPending(store, pending = true) {
+  store.syncPending = pending;
+  if (pending) setApiStatus(false, "Modo demo · sincronización pendiente");
+}
+
+function nowDemoId(prefix) {
+  return `${prefix}-DEMO-${Date.now()}`;
+}
+
+function activityById(id) {
+  return state.bootstrap.actividades.find((activity) => String(activity.IDActividad) === String(id));
+}
+
+function createLocalHabilitacion() {
+  const store = loadDemoStore();
+  const timestamp = Date.now();
+  const titularId = `TIT-DEMO-${timestamp}`;
+  const habilitacionId = `HAB-DEMO-${timestamp}`;
+  const activity = activityById(state.form.local.IDActividad);
+
+  store.titulares[titularId] = {
+    ...state.form.titular,
+    IDTitular: titularId
+  };
+
+  store.habilitaciones.push({
+    IDHabilitacion: habilitacionId,
+    IDTitular: titularId,
+    FechaSolicitud: new Date(timestamp).toISOString(),
+    NombreFantasia: state.form.local.NombreFantasia,
+    DomicilioLocal: state.form.local.DomicilioLocal,
+    SuperficieM2: state.form.local.SuperficieM2,
+    IDActividad: state.form.local.IDActividad,
+    NivelRiesgo: activity?.NivelRiesgo || "",
+    Estado: "BORRADOR",
+    source: "LOCAL_DEMO",
+    syncPending: true
+  });
+
+  store.documentos[habilitacionId] = [];
+  store.respuestas[habilitacionId] = [];
+  markDemoSyncPending(store);
+  saveDemoStore(store);
+
+  syncPendingDemoData();
+  return { ok: true, IDTitular: titularId, IDHabilitacion: habilitacionId };
+}
+
+function registerLocalDocument({ IDHabilitacion, TipoDocumento, NombreArchivo, URL_o_FileID }) {
+  const store = loadDemoStore();
+  const docs = store.documentos[IDHabilitacion] || [];
+  const nextDoc = {
+    TipoDocumento,
+    NombreArchivo,
+    URL_o_FileID,
+    EstadoDocumento: "PRESENTADO",
+    syncPending: true
+  };
+  store.documentos[IDHabilitacion] = [
+    ...docs.filter((doc) => doc.TipoDocumento !== TipoDocumento),
+    nextDoc
+  ];
+  const row = store.habilitaciones.find((item) => item.IDHabilitacion === IDHabilitacion);
+  if (row) row.syncPending = true;
+  markDemoSyncPending(store);
+  saveDemoStore(store);
+  syncPendingDemoData();
+  return { ok: true };
+}
+
+function saveLocalDDJJ({ IDHabilitacion, respuestas }) {
+  const store = loadDemoStore();
+  store.respuestas[IDHabilitacion] = respuestas.map((item) => ({ ...item, syncPending: true }));
+  const row = store.habilitaciones.find((item) => item.IDHabilitacion === IDHabilitacion);
+  if (row) row.syncPending = true;
+  markDemoSyncPending(store);
+  saveDemoStore(store);
+  syncPendingDemoData();
+  return { ok: true };
+}
+
+function localBlockingFailure() {
+  return questionsForSelectedActivity().find((question) => {
+    const selected = state.form.respuestas[question.IDPregunta];
+    return question.SiNoCumple === "BLOQUEAR" &&
+      question.RespuestaCompatible &&
+      selected !== question.RespuestaCompatible;
+  });
+}
+
+function finalizeLocalHabilitacion({ IDHabilitacion }) {
+  const store = loadDemoStore();
+  const row = store.habilitaciones.find((item) => item.IDHabilitacion === IDHabilitacion);
+  const activity = activityById(row?.IDActividad);
+
+  if (!row || !activity) return { ok: false, error: "No se encontró el trámite local." };
+
+  const missingDocs = requirementsForSelectedActivity()
+    .filter((req) => !state.form.files[req.TipoDocumento])
+    .map((req) => req.TipoDocumento);
+  if (missingDocs.length) return { ok: false, tipo: "DOCUMENTACION_INCOMPLETA", faltantes: missingDocs };
+
+  const missingAnswers = questionsForSelectedActivity()
+    .filter((question) => !state.form.respuestas[question.IDPregunta]);
+  if (missingAnswers.length) return { ok: false, tipo: "DDJJ_INCOMPLETA" };
+
+  const blocking = localBlockingFailure();
+  if (String(activity.HabilitacionInmediata).toUpperCase() !== "SI" || blocking) {
+    row.Estado = "EN_REVISION";
+    row.syncPending = true;
+    markDemoSyncPending(store);
+    saveDemoStore(store);
+    syncPendingDemoData();
+    return { ok: true, habilitado: false, estado: row.Estado };
+  }
+
+  row.NumeroHabilitacion = `HR-DEMO-2026-${String(Math.floor(Math.random() * 1000000)).padStart(6, "0")}`;
+  row.Estado = "HABILITADO_PROVISORIO";
+  row.FechaHabilitacion = new Date().toISOString();
+  row.syncPending = true;
+  markDemoSyncPending(store);
+  saveDemoStore(store);
+  syncPendingDemoData();
+
+  return { ok: true, habilitado: true, NumeroHabilitacion: row.NumeroHabilitacion };
+}
+
+function registerLocalVerification({ IDHabilitacion, Resultado, Observaciones }) {
+  const store = loadDemoStore();
+  const row = store.habilitaciones.find((item) => item.IDHabilitacion === IDHabilitacion);
+  if (!row) return { ok: false, error: "No se encontró el trámite local." };
+
+  const EstadoPosterior = Resultado === "CONFORME"
+    ? "VERIFICADO"
+    : Resultado === "OBSERVADO"
+      ? "OBSERVADO"
+      : "SUSPENDIDO";
+
+  row.Estado = EstadoPosterior;
+  row.syncPending = true;
+  store.verificaciones[IDHabilitacion] = [
+    ...(store.verificaciones[IDHabilitacion] || []),
+    {
+      Fecha: new Date().toISOString(),
+      Inspector: "Inspector Demo",
+      Resultado,
+      Observaciones,
+      syncPending: true
+    }
+  ];
+  markDemoSyncPending(store);
+  saveDemoStore(store);
+  syncPendingDemoData();
+  return { ok: true, EstadoPosterior };
+}
+
+function serverIdForLocal(row) {
+  return row?.IDHabilitacionReal || row?.serverIDHabilitacion || "";
+}
+
+function demoRowsForPanel(serverRows = []) {
+  const store = loadDemoStore();
+  const serverIds = new Set(serverRows.map((row) => String(row.IDHabilitacion)));
+  const localRows = store.habilitaciones
+    .filter((row) => !serverIdForLocal(row) || !serverIds.has(String(serverIdForLocal(row))))
+    .map((row) => ({ ...row, source: row.source || "LOCAL_DEMO" }));
+
+  return [
+    ...serverRows.map((row) => ({ ...row, source: "SERVER" })),
+    ...localRows
+  ];
+}
+
+function findLocalHabilitacion(id) {
+  const store = loadDemoStore();
+  const habilitacion = store.habilitaciones.find((row) =>
+    String(row.IDHabilitacion) === String(id) ||
+    String(serverIdForLocal(row)) === String(id)
+  );
+  if (!habilitacion) return null;
+  const titular = store.titulares[habilitacion.IDTitular] || {};
+  const actividad = activityById(habilitacion.IDActividad) || {};
+  return {
+    habilitacion,
+    titular,
+    actividad,
+    documentos: store.documentos[habilitacion.IDHabilitacion] || [],
+    respuestas: store.respuestas[habilitacion.IDHabilitacion] || [],
+    verificaciones: store.verificaciones[habilitacion.IDHabilitacion] || []
+  };
+}
+
+function syncPendingDemoData() {
+  if (!DEMO_FAST_MODE) return;
+
+  setTimeout(async () => {
+    const store = loadDemoStore();
+    try {
+      for (const row of store.habilitaciones.filter((item) => item.syncPending && !item.seed)) {
+        if (!serverIdForLocal(row)) {
+          const titular = store.titulares[row.IDTitular] || {};
+          const createResult = await apiPost({
+            action: "crearHabilitacion",
+            titular,
+            local: {
+              NombreFantasia: row.NombreFantasia,
+              SuperficieM2: row.SuperficieM2,
+              DomicilioLocal: row.DomicilioLocal,
+              IDActividad: row.IDActividad
+            }
+          });
+          if (createResult.ok) {
+            row.IDHabilitacionReal = createResult.IDHabilitacion;
+            row.IDTitularReal = createResult.IDTitular;
+          } else {
+            throw new Error(createResult.error || "No se pudo sincronizar la creación local.");
+          }
+        }
+
+        const targetId = serverIdForLocal(row) || row.IDHabilitacion;
+        for (const doc of store.documentos[row.IDHabilitacion] || []) {
+          if (!doc.syncPending) continue;
+          const docResult = await apiPost({
+            action: "registrarDocumento",
+            IDHabilitacion: targetId,
+            TipoDocumento: doc.TipoDocumento,
+            NombreArchivo: doc.NombreArchivo,
+            URL_o_FileID: doc.URL_o_FileID
+          });
+          if (docResult.ok) doc.syncPending = false;
+          else throw new Error(docResult.error || "No se pudo sincronizar un documento local.");
+        }
+
+        if ((store.respuestas[row.IDHabilitacion] || []).some((item) => item.syncPending)) {
+          const ddjjResult = await apiPost({
+            action: "guardarDDJJ",
+            IDHabilitacion: targetId,
+            respuestas: store.respuestas[row.IDHabilitacion].map(({ IDPregunta, Respuesta, Observacion }) => ({
+              IDPregunta,
+              Respuesta,
+              Observacion: Observacion || ""
+            }))
+          });
+          if (ddjjResult.ok) {
+            store.respuestas[row.IDHabilitacion] = store.respuestas[row.IDHabilitacion].map((item) => ({
+              ...item,
+              syncPending: false
+            }));
+          } else {
+            throw new Error(ddjjResult.error || "No se pudo sincronizar la DDJJ local.");
+          }
+        }
+
+        if (row.NumeroHabilitacion && row.Estado === "HABILITADO_PROVISORIO") {
+          const finalizeResult = await apiPost({ action: "finalizarHabilitacion", IDHabilitacion: targetId });
+          if (!finalizeResult.ok) throw new Error(finalizeResult.error || "No se pudo sincronizar la finalización local.");
+        }
+
+        row.syncPending = false;
+      }
+
+      store.syncPending = store.habilitaciones.some((row) => row.syncPending);
+      saveDemoStore(store);
+      if (!store.syncPending) setApiStatus(true, "Modo demo");
+    } catch (error) {
+      markDemoSyncPending(store);
+      saveDemoStore(store);
+      demoWarn("Sincronización demo pendiente.", error);
+    }
+  }, 0);
+}
+
 function openModal(html) {
   $("#modalContent").innerHTML = html;
   $("#modalBackdrop").classList.remove("hidden");
@@ -213,19 +719,22 @@ async function bootstrap() {
   bindGlobalEvents();
   initTutorial();
 
-  try {
-    const data = await apiGet("bootstrap");
-    state.bootstrap.actividades = data.actividades || [];
-    state.bootstrap.requisitos = data.requisitos || [];
-    state.bootstrap.preguntas = data.preguntas || [];
-    setApiStatus(true, "Backend conectado");
-  } catch (error) {
-    console.error(error);
-    setApiStatus(false, "Sin conexión");
-    showToast(error.message, "error");
-  }
+  state.bootstrap.actividades = DEMO_BOOTSTRAP.actividades;
+  state.bootstrap.requisitos = DEMO_BOOTSTRAP.requisitos;
+  state.bootstrap.preguntas = DEMO_BOOTSTRAP.preguntas;
+  setApiStatus(true, "Modo demo");
 
   showView("home");
+  syncPendingDemoData();
+
+  apiGet("bootstrap")
+    .then((data) => {
+      state.bootstrap.actividades = data.actividades || DEMO_BOOTSTRAP.actividades;
+      state.bootstrap.requisitos = data.requisitos || DEMO_BOOTSTRAP.requisitos;
+      state.bootstrap.preguntas = data.preguntas || DEMO_BOOTSTRAP.preguntas;
+      setApiStatus(true, "Backend sincronizado");
+    })
+    .catch((error) => demoWarn("Bootstrap remoto no disponible. Continúa DEMO_BOOTSTRAP.", error));
 }
 
 function bindGlobalEvents() {
@@ -326,11 +835,7 @@ function initTutorial() {
     dots.appendChild(dot);
   });
 
-  if (!localStorage.getItem(TUTORIAL_KEY)) {
-    showTutorial();
-  } else {
-    setTutorialSlide(0);
-  }
+  showTutorial(true);
 }
 
 function showTutorial(force = false) {
@@ -371,7 +876,6 @@ function tutorialPrev() {
 }
 
 function finishTutorial() {
-  localStorage.setItem(TUTORIAL_KEY, "1");
   $("#tutorialOverlay").classList.add("hidden");
   document.body.classList.remove("no-scroll");
 }
@@ -763,7 +1267,17 @@ function bindWizardStepEvents() {
       input.addEventListener("change", () => {
         const type = input.dataset.docType;
         const file = input.files?.[0];
-        if (file) state.form.files[type] = file;
+        if (file) {
+          state.form.files[type] = file;
+          if (DEMO_FAST_MODE && state.currentHabilitacionId) {
+            registerLocalDocument({
+              IDHabilitacion: state.currentHabilitacionId,
+              TipoDocumento: type,
+              NombreArchivo: file.name,
+              URL_o_FileID: `demo://seleccionado/${file.name}`
+            });
+          }
+        }
         renderWizard();
       });
     });
@@ -842,6 +1356,16 @@ async function wizardNext() {
   if (state.wizardStep === 2) {
     if (!validateDataForm()) return;
 
+    if (DEMO_FAST_MODE) {
+      const result = createLocalHabilitacion();
+      state.currentHabilitacionId = result.IDHabilitacion;
+      state.currentTitularId = result.IDTitular;
+      state.wizardStep = 3;
+      renderWizard();
+      showToast(`Trámite ${result.IDHabilitacion} creado.`, "success");
+      return;
+    }
+
     setBusy(button, true, "Creando trámite…");
 
     try {
@@ -874,6 +1398,22 @@ async function wizardNext() {
 
     if (missing.length) {
       showToast(`Falta seleccionar: ${missing.map((r) => r.TipoDocumento).join(", ")}`, "error");
+      return;
+    }
+
+    if (DEMO_FAST_MODE) {
+      for (const req of requirements) {
+        const file = state.form.files[req.TipoDocumento];
+        registerLocalDocument({
+          IDHabilitacion: state.currentHabilitacionId,
+          TipoDocumento: req.TipoDocumento,
+          NombreArchivo: file?.name || "",
+          URL_o_FileID: `demo://seleccionado/${file?.name || "sin-archivo"}`
+        });
+      }
+      state.wizardStep = 4;
+      renderWizard();
+      showToast("Documentación registrada.", "success");
       return;
     }
 
@@ -916,6 +1456,21 @@ async function wizardNext() {
       return;
     }
 
+    if (DEMO_FAST_MODE) {
+      saveLocalDDJJ({
+        IDHabilitacion: state.currentHabilitacionId,
+        respuestas: questions.map((q) => ({
+          IDPregunta: q.IDPregunta,
+          Respuesta: state.form.respuestas[q.IDPregunta],
+          Observacion: ""
+        }))
+      });
+      state.wizardStep = 5;
+      renderWizard();
+      showToast("Declaración jurada guardada.", "success");
+      return;
+    }
+
     setBusy(button, true, "Guardando DDJJ…");
 
     try {
@@ -946,6 +1501,53 @@ async function wizardNext() {
   if (state.wizardStep === 5) {
     if (!$("#finalDeclaration")?.checked) {
       showToast("Tenés que aceptar la declaración jurada final.", "error");
+      return;
+    }
+
+    if (DEMO_FAST_MODE) {
+      const result = finalizeLocalHabilitacion({
+        IDHabilitacion: state.currentHabilitacionId
+      });
+
+      if (!result.ok) {
+        if (result.tipo === "DOCUMENTACION_INCOMPLETA") {
+          showToast(`Falta documentación: ${(result.faltantes || []).join(", ")}`, "error");
+          return;
+        }
+        if (result.tipo === "DDJJ_INCOMPLETA") {
+          showToast("La declaración jurada está incompleta.", "error");
+          return;
+        }
+        showToast(result.error || "No se pudo finalizar el trámite.", "error");
+        return;
+      }
+
+      if (!result.habilitado) {
+        openModal(`
+          <h3>El trámite requiere revisión</h3>
+          <p>
+            Esta actividad o alguna respuesta de la DDJJ no permite una habilitación automática.
+            El expediente quedó en estado <strong>${escapeHtml(result.estado || "EN_REVISION")}</strong>.
+          </p>
+          <div class="modal-actions">
+            <button class="btn primary" type="button" data-go="municipio" onclick="closeModal()">Ver panel municipal</button>
+          </div>
+        `);
+        return;
+      }
+
+      state.certificate = {
+        numero: result.NumeroHabilitacion,
+        fecha: new Date(),
+        titular: state.form.titular.NombreApellido,
+        negocio: state.form.local.NombreFantasia,
+        actividad: state.selectedActivity?.Actividad,
+        domicilio: state.form.local.DomicilioLocal
+      };
+
+      renderCertificate();
+      showView("certificate");
+      showToast("Habilitación digital emitida.", "success");
       return;
     }
 
@@ -1099,6 +1701,31 @@ async function loadMunicipal() {
   const wrap = $("#municipalTableWrap");
   wrap.innerHTML = `<div class="loading-box">Cargando trámites…</div>`;
   setMunicipalRefreshBusy(true);
+
+  if (DEMO_FAST_MODE) {
+    state.municipal.habilitaciones = demoRowsForPanel([]);
+    renderStatusFilters();
+    renderMunicipalTable();
+
+    if (state.municipal.selectedId && !state.municipal.habilitaciones.some((row) =>
+      String(row.IDHabilitacion) === String(state.municipal.selectedId)
+    )) {
+      state.municipal.selectedId = null;
+      renderEmptyMunicipalDetail();
+    }
+
+    apiGet("habilitaciones")
+      .then((data) => {
+        state.municipal.habilitaciones = demoRowsForPanel(data.habilitaciones || []);
+        renderStatusFilters();
+        renderMunicipalTable();
+        if (state.municipal.selectedId) loadExpediente(state.municipal.selectedId);
+        syncPendingDemoData();
+      })
+      .catch((error) => demoWarn("Habilitaciones remotas no disponibles. Continúa el panel demo.", error))
+      .finally(() => setMunicipalRefreshBusy(false));
+    return;
+  }
 
   try {
     const data = await apiGet("habilitaciones");
@@ -1273,11 +1900,24 @@ async function loadExpediente(id) {
   const detail = $("#municipalDetail");
   detail.innerHTML = `<div class="loading-box">Cargando expediente…</div>`;
 
+  if (DEMO_FAST_MODE) {
+    const local = findLocalHabilitacion(id);
+    if (local) {
+      renderExpedienteDetail(local);
+      return;
+    }
+  }
+
   try {
     const data = await apiGet("expediente", { id });
     renderExpedienteDetail(data);
   } catch (error) {
     console.error(error);
+    if (DEMO_FAST_MODE) {
+      demoWarn("Expediente remoto no disponible.", error);
+      detail.innerHTML = `<div class="empty-detail"><h3>Sin detalle remoto</h3><p>El panel demo sigue disponible con los trámites locales.</p></div>`;
+      return;
+    }
     detail.innerHTML = `<div class="empty-detail"><h3>Error</h3><p>${escapeHtml(error.message)}</p></div>`;
   }
 }
@@ -1368,6 +2008,21 @@ async function submitVerification(result) {
     setBusy(button, true, "Guardando…");
 
     try {
+      if (DEMO_FAST_MODE && findLocalHabilitacion(id)) {
+        const response = registerLocalVerification({
+          IDHabilitacion: id,
+          Resultado: result,
+          Observaciones: note
+        });
+        if (!response.ok) throw new Error(response.error || "No se pudo registrar la verificación local.");
+
+        closeModal();
+        showToast(`Estado actualizado a ${response.EstadoPosterior}.`, "success");
+        await loadMunicipal();
+        await loadExpediente(id);
+        return;
+      }
+
       const response = await apiPost({
         action: "registrarVerificacion",
         IDHabilitacion: id,
