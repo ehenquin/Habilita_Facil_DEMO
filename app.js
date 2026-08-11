@@ -8,6 +8,7 @@ const API_URL =
 
 const DEMO_FAST_MODE = true;
 const DEMO_STORE_KEY = "habilita_facil_demo_data_v1";
+let demoSyncRunning = false;
 
 const DEMO_BOOTSTRAP = {
   actividades: [
@@ -18,7 +19,7 @@ const DEMO_BOOTSTRAP = {
       NivelRiesgo: "BAJO",
       HabilitacionInmediata: "SI",
       RequiereInspeccionPrevia: "NO",
-      Activa: "SI"
+      Activa: "SI",
     },
     {
       IDActividad: "ACT-002",
@@ -27,7 +28,7 @@ const DEMO_BOOTSTRAP = {
       NivelRiesgo: "BAJO",
       HabilitacionInmediata: "SI",
       RequiereInspeccionPrevia: "NO",
-      Activa: "SI"
+      Activa: "SI",
     },
     {
       IDActividad: "ACT-003",
@@ -36,7 +37,7 @@ const DEMO_BOOTSTRAP = {
       NivelRiesgo: "MEDIO",
       HabilitacionInmediata: "SI",
       RequiereInspeccionPrevia: "NO",
-      Activa: "SI"
+      Activa: "SI",
     },
     {
       IDActividad: "ACT-004",
@@ -45,7 +46,7 @@ const DEMO_BOOTSTRAP = {
       NivelRiesgo: "MEDIO",
       HabilitacionInmediata: "SI",
       RequiereInspeccionPrevia: "NO",
-      Activa: "SI"
+      Activa: "SI",
     },
     {
       IDActividad: "ACT-005",
@@ -54,7 +55,7 @@ const DEMO_BOOTSTRAP = {
       NivelRiesgo: "MEDIO",
       HabilitacionInmediata: "SI",
       RequiereInspeccionPrevia: "NO",
-      Activa: "SI"
+      Activa: "SI",
     },
     {
       IDActividad: "ACT-006",
@@ -63,38 +64,103 @@ const DEMO_BOOTSTRAP = {
       NivelRiesgo: "ALTO",
       HabilitacionInmediata: "NO",
       RequiereInspeccionPrevia: "SI",
-      Activa: "SI"
-    }
+      Activa: "SI",
+    },
   ],
   requisitos: [
-    { IDRequisito: "REQ-001", IDActividad: "ACT-001", TipoDocumento: "DNI", Descripcion: "Documento de identidad del titular", Obligatorio: "SI", Momento: "INICIO" },
-    { IDRequisito: "REQ-002", IDActividad: "ACT-001", TipoDocumento: "Constancia CUIT", Descripcion: "Constancia fiscal vigente", Obligatorio: "SI", Momento: "INICIO" },
-    { IDRequisito: "REQ-003", IDActividad: "ACT-003", TipoDocumento: "DNI", Descripcion: "Documento de identidad del titular", Obligatorio: "SI", Momento: "INICIO" },
-    { IDRequisito: "REQ-004", IDActividad: "ACT-003", TipoDocumento: "Constancia CUIT", Descripcion: "Constancia fiscal vigente", Obligatorio: "SI", Momento: "INICIO" },
-    { IDRequisito: "REQ-005", IDActividad: "ACT-004", TipoDocumento: "DNI", Descripcion: "Documento de identidad del titular", Obligatorio: "SI", Momento: "INICIO" },
-    { IDRequisito: "REQ-006", IDActividad: "ACT-004", TipoDocumento: "Constancia CUIT", Descripcion: "Constancia fiscal vigente", Obligatorio: "SI", Momento: "INICIO" },
-    { IDRequisito: "REQ-007", IDActividad: "ACT-004", TipoDocumento: "Carnet manipulador", Descripcion: "Carnet de manipulación de alimentos", Obligatorio: "SI", Momento: "INICIO" },
-    { IDRequisito: "REQ-008", IDActividad: "ACT-005", TipoDocumento: "DNI", Descripcion: "Documento de identidad del titular", Obligatorio: "SI", Momento: "INICIO" },
-    { IDRequisito: "REQ-009", IDActividad: "ACT-005", TipoDocumento: "Constancia CUIT", Descripcion: "Constancia fiscal vigente", Obligatorio: "SI", Momento: "INICIO" }
+    {
+      IDRequisito: "REQ-001",
+      IDActividad: "ACT-001",
+      TipoDocumento: "DNI",
+      Descripcion: "Documento de identidad del titular",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
+    {
+      IDRequisito: "REQ-002",
+      IDActividad: "ACT-001",
+      TipoDocumento: "Constancia CUIT",
+      Descripcion: "Constancia fiscal vigente",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
+    {
+      IDRequisito: "REQ-003",
+      IDActividad: "ACT-003",
+      TipoDocumento: "DNI",
+      Descripcion: "Documento de identidad del titular",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
+    {
+      IDRequisito: "REQ-004",
+      IDActividad: "ACT-003",
+      TipoDocumento: "Constancia CUIT",
+      Descripcion: "Constancia fiscal vigente",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
+    {
+      IDRequisito: "REQ-005",
+      IDActividad: "ACT-004",
+      TipoDocumento: "DNI",
+      Descripcion: "Documento de identidad del titular",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
+    {
+      IDRequisito: "REQ-006",
+      IDActividad: "ACT-004",
+      TipoDocumento: "Constancia CUIT",
+      Descripcion: "Constancia fiscal vigente",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
+    {
+      IDRequisito: "REQ-007",
+      IDActividad: "ACT-004",
+      TipoDocumento: "Carnet manipulador",
+      Descripcion: "Carnet de manipulación de alimentos",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
+    {
+      IDRequisito: "REQ-008",
+      IDActividad: "ACT-005",
+      TipoDocumento: "DNI",
+      Descripcion: "Documento de identidad del titular",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
+    {
+      IDRequisito: "REQ-009",
+      IDActividad: "ACT-005",
+      TipoDocumento: "Constancia CUIT",
+      Descripcion: "Constancia fiscal vigente",
+      Obligatorio: "SI",
+      Momento: "INICIO",
+    },
   ],
   preguntas: [
     {
       IDPregunta: "PRE-001",
       AplicaCategoria: "TODAS",
-      TextoPregunta: "¿El domicilio declarado corresponde al local donde desarrollarás la actividad?",
+      TextoPregunta:
+        "¿El domicilio declarado corresponde al local donde desarrollarás la actividad?",
       RespuestaCompatible: "SI",
       SiNoCumple: "BLOQUEAR",
       Activa: "SI",
-      Orden: 1
+      Orden: 1,
     },
     {
       IDPregunta: "PRE-002",
       AplicaCategoria: "TODAS",
-      TextoPregunta: "¿El local cuenta con condiciones básicas de seguridad y evacuación?",
+      TextoPregunta:
+        "¿El local cuenta con condiciones básicas de seguridad y evacuación?",
       RespuestaCompatible: "SI",
       SiNoCumple: "OBSERVAR",
       Activa: "SI",
-      Orden: 2
+      Orden: 2,
     },
     {
       IDPregunta: "PRE-003",
@@ -103,27 +169,29 @@ const DEMO_BOOTSTRAP = {
       RespuestaCompatible: "SI",
       SiNoCumple: "OBSERVAR",
       Activa: "SI",
-      Orden: 3
+      Orden: 3,
     },
     {
       IDPregunta: "PRE-004",
       AplicaCategoria: "Gastronomía",
-      TextoPregunta: "¿El establecimiento cuenta con provisión de agua y condiciones higiénicas adecuadas?",
+      TextoPregunta:
+        "¿El establecimiento cuenta con provisión de agua y condiciones higiénicas adecuadas?",
       RespuestaCompatible: "SI",
       SiNoCumple: "OBSERVAR",
       Activa: "SI",
-      Orden: 4
+      Orden: 4,
     },
     {
       IDPregunta: "PRE-005",
       AplicaCategoria: "Comercio",
-      TextoPregunta: "¿La actividad se desarrollará íntegramente dentro del local declarado?",
+      TextoPregunta:
+        "¿La actividad se desarrollará íntegramente dentro del local declarado?",
       RespuestaCompatible: "SI",
       SiNoCumple: "OBSERVAR",
       Activa: "SI",
-      Orden: 5
-    }
-  ]
+      Orden: 5,
+    },
+  ],
 };
 
 const DEMO_SEED_HABILITACIONES = [
@@ -137,7 +205,7 @@ const DEMO_SEED_HABILITACIONES = [
     IDActividad: "ACT-003",
     NivelRiesgo: "MEDIO",
     Estado: "HABILITADO_PROVISORIO",
-    source: "LOCAL_DEMO"
+    source: "LOCAL_DEMO",
   },
   {
     IDHabilitacion: "HAB-000242",
@@ -149,7 +217,7 @@ const DEMO_SEED_HABILITACIONES = [
     IDActividad: "ACT-002",
     NivelRiesgo: "BAJO",
     Estado: "HABILITADO_PROVISORIO",
-    source: "LOCAL_DEMO"
+    source: "LOCAL_DEMO",
   },
   {
     IDHabilitacion: "HAB-000243",
@@ -161,15 +229,15 @@ const DEMO_SEED_HABILITACIONES = [
     IDActividad: "ACT-004",
     NivelRiesgo: "MEDIO",
     Estado: "HABILITADO_PROVISORIO",
-    source: "LOCAL_DEMO"
-  }
+    source: "LOCAL_DEMO",
+  },
 ];
 
 const state = {
   bootstrap: {
     actividades: [],
     requisitos: [],
-    preguntas: []
+    preguntas: [],
   },
   tutorialIndex: 0,
   wizardStep: 1,
@@ -180,15 +248,15 @@ const state = {
     titular: {},
     local: {},
     files: {},
-    respuestas: {}
+    respuestas: {},
   },
   certificate: null,
   municipal: {
     habilitaciones: [],
     filter: "TODOS",
     search: "",
-    selectedId: null
-  }
+    selectedId: null,
+  },
 };
 
 const WIZARD_STEPS = [
@@ -196,7 +264,7 @@ const WIZARD_STEPS = [
   { n: 2, title: "Datos", hint: "Titular y local." },
   { n: 3, title: "Documentación", hint: "Solo lo necesario." },
   { n: 4, title: "Declaración jurada", hint: "Confirmá condiciones." },
-  { n: 5, title: "Confirmación", hint: "Revisá y habilitá." }
+  { n: 5, title: "Confirmación", hint: "Revisá y habilitá." },
 ];
 
 /* ============================================================
@@ -227,7 +295,7 @@ function formatDate(value, withTime = false) {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-    ...(withTime ? { hour: "2-digit", minute: "2-digit" } : {})
+    ...(withTime ? { hour: "2-digit", minute: "2-digit" } : {}),
   }).format(date);
 }
 
@@ -279,7 +347,7 @@ function responseDiagnostics(response, text) {
     status: response.status,
     url: response.url,
     contentType: response.headers.get("content-type") || "",
-    preview: text.slice(0, 200)
+    preview: text.slice(0, 200),
   };
 }
 
@@ -288,9 +356,10 @@ function logResponseDiagnostics(label, response, text) {
 }
 
 async function fetchApi(url, options) {
-  const controller = DEMO_FAST_MODE && "AbortController" in window
-    ? new AbortController()
-    : null;
+  const controller =
+    DEMO_FAST_MODE && "AbortController" in window
+      ? new AbortController()
+      : null;
   const timeout = controller
     ? setTimeout(() => controller.abort(), 3500)
     : null;
@@ -298,7 +367,7 @@ async function fetchApi(url, options) {
   try {
     return await fetch(url, {
       ...options,
-      ...(controller ? { signal: controller.signal } : {})
+      ...(controller ? { signal: controller.signal } : {}),
     });
   } catch (error) {
     if (navigator.onLine === false) {
@@ -312,14 +381,22 @@ async function fetchApi(url, options) {
 
 async function parseApiResponse(response, text, label) {
   if (!response.ok) {
-    logResponseDiagnostics(`${label}: respuesta HTTP no exitosa`, response, text);
+    logResponseDiagnostics(
+      `${label}: respuesta HTTP no exitosa`,
+      response,
+      text,
+    );
     throw new Error(connectionErrorMessage());
   }
 
   try {
     return JSON.parse(text);
   } catch {
-    logResponseDiagnostics(`${label}: la respuesta no es JSON válido`, response, text);
+    logResponseDiagnostics(
+      `${label}: la respuesta no es JSON válido`,
+      response,
+      text,
+    );
     throw new Error(connectionErrorMessage());
   }
 }
@@ -327,13 +404,15 @@ async function parseApiResponse(response, text, label) {
 async function apiGet(action, params = {}) {
   const url = new URL(API_URL);
   url.searchParams.set("action", action);
-  Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+  Object.entries(params).forEach(([key, value]) =>
+    url.searchParams.set(key, value),
+  );
   url.searchParams.set("_ts", Date.now().toString());
 
   const response = await fetchApi(url.toString(), {
     method: "GET",
     cache: "no-store",
-    redirect: "follow"
+    redirect: "follow",
   });
 
   const text = await response.text();
@@ -350,14 +429,18 @@ async function apiPost(payload) {
   const response = await fetchApi(`${API_URL}?_ts=${Date.now()}`, {
     method: "POST",
     headers: {
-      "Content-Type": "text/plain;charset=utf-8"
+      "Content-Type": "text/plain;charset=utf-8",
     },
     body: JSON.stringify(payload),
-    redirect: "follow"
+    redirect: "follow",
   });
 
   const text = await response.text();
-  const data = await parseApiResponse(response, text, `apiPost(${payload?.action || "sin action"})`);
+  const data = await parseApiResponse(
+    response,
+    text,
+    `apiPost(${payload?.action || "sin action"})`,
+  );
 
   return data;
 }
@@ -367,11 +450,75 @@ function demoWarn(message, error) {
   setApiStatus(false, "Modo demo · sincronización pendiente");
 }
 
+function defaultDemoSync() {
+  return {
+    creating: false,
+    created: false,
+    documents: {},
+    ddjj: false,
+    finalized: false,
+  };
+}
+
+function normalizeDemoSync(sync = {}) {
+  return {
+    ...defaultDemoSync(),
+    ...sync,
+    documents: sync.documents || {},
+  };
+}
+
+function documentSyncKey(doc) {
+  return `${normalize(doc.TipoDocumento)}::${normalize(doc.NombreArchivo)}`;
+}
+
+function normalizeDemoRow(row) {
+  const sync = normalizeDemoSync(row.sync);
+  const serverIDHabilitacion =
+    row.serverIDHabilitacion || row.IDHabilitacionReal || "";
+  const serverIDTitular = row.serverIDTitular || row.IDTitularReal || "";
+  const serverNumeroHabilitacion = row.serverNumeroHabilitacion || "";
+
+  if (serverIDHabilitacion) {
+    sync.created = true;
+    sync.creating = false;
+  }
+
+  return {
+    ...row,
+    sync,
+    serverIDHabilitacion,
+    serverIDTitular,
+    serverNumeroHabilitacion,
+  };
+}
+
 function demoStoreDefaults() {
   const titulares = {
-    "TIT-SEED-000241": { IDTitular: "TIT-SEED-000241", NombreApellido: "Lucía Gómez", CUIT: "27-30111222-4", Email: "lucia@example.com", Telefono: "342 555 0101", DomicilioReal: "San Martín 1200, Santa Fe" },
-    "TIT-SEED-000242": { IDTitular: "TIT-SEED-000242", NombreApellido: "Martín Ríos", CUIT: "20-28777888-2", Email: "martin@example.com", Telefono: "342 555 0102", DomicilioReal: "Bv. Gálvez 1800, Santa Fe" },
-    "TIT-SEED-000243": { IDTitular: "TIT-SEED-000243", NombreApellido: "Carolina Pérez", CUIT: "27-33555666-8", Email: "carolina@example.com", Telefono: "342 555 0103", DomicilioReal: "Mendoza 2500, Santa Fe" }
+    "TIT-SEED-000241": {
+      IDTitular: "TIT-SEED-000241",
+      NombreApellido: "Lucía Gómez",
+      CUIT: "27-30111222-4",
+      Email: "lucia@example.com",
+      Telefono: "342 555 0101",
+      DomicilioReal: "San Martín 1200, Santa Fe",
+    },
+    "TIT-SEED-000242": {
+      IDTitular: "TIT-SEED-000242",
+      NombreApellido: "Martín Ríos",
+      CUIT: "20-28777888-2",
+      Email: "martin@example.com",
+      Telefono: "342 555 0102",
+      DomicilioReal: "Bv. Gálvez 1800, Santa Fe",
+    },
+    "TIT-SEED-000243": {
+      IDTitular: "TIT-SEED-000243",
+      NombreApellido: "Carolina Pérez",
+      CUIT: "27-33555666-8",
+      Email: "carolina@example.com",
+      Telefono: "342 555 0103",
+      DomicilioReal: "Mendoza 2500, Santa Fe",
+    },
   };
 
   return {
@@ -379,36 +526,72 @@ function demoStoreDefaults() {
     habilitaciones: DEMO_SEED_HABILITACIONES.map((row, index) => ({
       ...row,
       IDTitular: Object.keys(titulares)[index],
+      sync: {
+        ...defaultDemoSync(),
+        created: true,
+        ddjj: true,
+        finalized: true,
+      },
       syncPending: false,
-      seed: true
+      seed: true,
     })),
     documentos: {
       "HAB-000241": [
-        { TipoDocumento: "DNI", NombreArchivo: "dni_la_esquina.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/dni_la_esquina.pdf" },
-        { TipoDocumento: "Constancia CUIT", NombreArchivo: "cuit_la_esquina.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/cuit_la_esquina.pdf" }
+        {
+          TipoDocumento: "DNI",
+          NombreArchivo: "dni_la_esquina.pdf",
+          EstadoDocumento: "PRESENTADO",
+          URL_o_FileID: "demo://seleccionado/dni_la_esquina.pdf",
+        },
+        {
+          TipoDocumento: "Constancia CUIT",
+          NombreArchivo: "cuit_la_esquina.pdf",
+          EstadoDocumento: "PRESENTADO",
+          URL_o_FileID: "demo://seleccionado/cuit_la_esquina.pdf",
+        },
       ],
       "HAB-000242": [],
       "HAB-000243": [
-        { TipoDocumento: "DNI", NombreArchivo: "dni_cafe_centro.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/dni_cafe_centro.pdf" },
-        { TipoDocumento: "Constancia CUIT", NombreArchivo: "cuit_cafe_centro.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/cuit_cafe_centro.pdf" },
-        { TipoDocumento: "Carnet manipulador", NombreArchivo: "carnet_cafe_centro.pdf", EstadoDocumento: "PRESENTADO", URL_o_FileID: "demo://seleccionado/carnet_cafe_centro.pdf" }
-      ]
+        {
+          TipoDocumento: "DNI",
+          NombreArchivo: "dni_cafe_centro.pdf",
+          EstadoDocumento: "PRESENTADO",
+          URL_o_FileID: "demo://seleccionado/dni_cafe_centro.pdf",
+        },
+        {
+          TipoDocumento: "Constancia CUIT",
+          NombreArchivo: "cuit_cafe_centro.pdf",
+          EstadoDocumento: "PRESENTADO",
+          URL_o_FileID: "demo://seleccionado/cuit_cafe_centro.pdf",
+        },
+        {
+          TipoDocumento: "Carnet manipulador",
+          NombreArchivo: "carnet_cafe_centro.pdf",
+          EstadoDocumento: "PRESENTADO",
+          URL_o_FileID: "demo://seleccionado/carnet_cafe_centro.pdf",
+        },
+      ],
     },
     respuestas: {},
     verificaciones: {},
-    syncPending: false
+    syncPending: false,
   };
 }
 
 function normalizeDemoStore(store) {
   const defaults = demoStoreDefaults();
+  const habilitaciones = (store?.habilitaciones || defaults.habilitaciones).map(
+    normalizeDemoRow,
+  );
   return {
     titulares: store?.titulares || defaults.titulares,
-    habilitaciones: store?.habilitaciones || defaults.habilitaciones,
+    habilitaciones,
     documentos: store?.documentos || defaults.documentos,
     respuestas: store?.respuestas || defaults.respuestas,
     verificaciones: store?.verificaciones || defaults.verificaciones,
-    syncPending: Boolean(store?.syncPending)
+    syncPending: Boolean(
+      store?.syncPending || habilitaciones.some((row) => row.syncPending),
+    ),
   };
 }
 
@@ -418,13 +601,19 @@ function loadDemoStore() {
     if (!raw) return demoStoreDefaults();
     return normalizeDemoStore(JSON.parse(raw));
   } catch (error) {
-    console.warn("No se pudo leer el store demo. Se reinicia con datos mínimos.", error);
+    console.warn(
+      "No se pudo leer el store demo. Se reinicia con datos mínimos.",
+      error,
+    );
     return demoStoreDefaults();
   }
 }
 
 function saveDemoStore(store) {
-  localStorage.setItem(DEMO_STORE_KEY, JSON.stringify(normalizeDemoStore(store)));
+  localStorage.setItem(
+    DEMO_STORE_KEY,
+    JSON.stringify(normalizeDemoStore(store)),
+  );
 }
 
 function markDemoSyncPending(store, pending = true) {
@@ -437,7 +626,9 @@ function nowDemoId(prefix) {
 }
 
 function activityById(id) {
-  return state.bootstrap.actividades.find((activity) => String(activity.IDActividad) === String(id));
+  return state.bootstrap.actividades.find(
+    (activity) => String(activity.IDActividad) === String(id),
+  );
 }
 
 function createLocalHabilitacion() {
@@ -449,7 +640,7 @@ function createLocalHabilitacion() {
 
   store.titulares[titularId] = {
     ...state.form.titular,
-    IDTitular: titularId
+    IDTitular: titularId,
   };
 
   store.habilitaciones.push({
@@ -463,7 +654,8 @@ function createLocalHabilitacion() {
     NivelRiesgo: activity?.NivelRiesgo || "",
     Estado: "BORRADOR",
     source: "LOCAL_DEMO",
-    syncPending: true
+    sync: defaultDemoSync(),
+    syncPending: true,
   });
 
   store.documentos[habilitacionId] = [];
@@ -475,7 +667,12 @@ function createLocalHabilitacion() {
   return { ok: true, IDTitular: titularId, IDHabilitacion: habilitacionId };
 }
 
-function registerLocalDocument({ IDHabilitacion, TipoDocumento, NombreArchivo, URL_o_FileID }) {
+function registerLocalDocument({
+  IDHabilitacion,
+  TipoDocumento,
+  NombreArchivo,
+  URL_o_FileID,
+}) {
   const store = loadDemoStore();
   const docs = store.documentos[IDHabilitacion] || [];
   const nextDoc = {
@@ -483,14 +680,19 @@ function registerLocalDocument({ IDHabilitacion, TipoDocumento, NombreArchivo, U
     NombreArchivo,
     URL_o_FileID,
     EstadoDocumento: "PRESENTADO",
-    syncPending: true
   };
   store.documentos[IDHabilitacion] = [
     ...docs.filter((doc) => doc.TipoDocumento !== TipoDocumento),
-    nextDoc
+    nextDoc,
   ];
-  const row = store.habilitaciones.find((item) => item.IDHabilitacion === IDHabilitacion);
-  if (row) row.syncPending = true;
+  const row = store.habilitaciones.find(
+    (item) => item.IDHabilitacion === IDHabilitacion,
+  );
+  if (row) {
+    row.sync = normalizeDemoSync(row.sync);
+    row.sync.documents[documentSyncKey(nextDoc)] = false;
+    row.syncPending = true;
+  }
   markDemoSyncPending(store);
   saveDemoStore(store);
   syncPendingDemoData();
@@ -499,9 +701,15 @@ function registerLocalDocument({ IDHabilitacion, TipoDocumento, NombreArchivo, U
 
 function saveLocalDDJJ({ IDHabilitacion, respuestas }) {
   const store = loadDemoStore();
-  store.respuestas[IDHabilitacion] = respuestas.map((item) => ({ ...item, syncPending: true }));
-  const row = store.habilitaciones.find((item) => item.IDHabilitacion === IDHabilitacion);
-  if (row) row.syncPending = true;
+  store.respuestas[IDHabilitacion] = respuestas;
+  const row = store.habilitaciones.find(
+    (item) => item.IDHabilitacion === IDHabilitacion,
+  );
+  if (row) {
+    row.sync = normalizeDemoSync(row.sync);
+    row.sync.ddjj = false;
+    row.syncPending = true;
+  }
   markDemoSyncPending(store);
   saveDemoStore(store);
   syncPendingDemoData();
@@ -511,31 +719,46 @@ function saveLocalDDJJ({ IDHabilitacion, respuestas }) {
 function localBlockingFailure() {
   return questionsForSelectedActivity().find((question) => {
     const selected = state.form.respuestas[question.IDPregunta];
-    return question.SiNoCumple === "BLOQUEAR" &&
+    return (
+      question.SiNoCumple === "BLOQUEAR" &&
       question.RespuestaCompatible &&
-      selected !== question.RespuestaCompatible;
+      selected !== question.RespuestaCompatible
+    );
   });
 }
 
 function finalizeLocalHabilitacion({ IDHabilitacion }) {
   const store = loadDemoStore();
-  const row = store.habilitaciones.find((item) => item.IDHabilitacion === IDHabilitacion);
+  const row = store.habilitaciones.find(
+    (item) => item.IDHabilitacion === IDHabilitacion,
+  );
   const activity = activityById(row?.IDActividad);
 
-  if (!row || !activity) return { ok: false, error: "No se encontró el trámite local." };
+  if (!row || !activity)
+    return { ok: false, error: "No se encontró el trámite local." };
 
   const missingDocs = requirementsForSelectedActivity()
     .filter((req) => !state.form.files[req.TipoDocumento])
     .map((req) => req.TipoDocumento);
-  if (missingDocs.length) return { ok: false, tipo: "DOCUMENTACION_INCOMPLETA", faltantes: missingDocs };
+  if (missingDocs.length)
+    return {
+      ok: false,
+      tipo: "DOCUMENTACION_INCOMPLETA",
+      faltantes: missingDocs,
+    };
 
-  const missingAnswers = questionsForSelectedActivity()
-    .filter((question) => !state.form.respuestas[question.IDPregunta]);
+  const missingAnswers = questionsForSelectedActivity().filter(
+    (question) => !state.form.respuestas[question.IDPregunta],
+  );
   if (missingAnswers.length) return { ok: false, tipo: "DDJJ_INCOMPLETA" };
 
   const blocking = localBlockingFailure();
-  if (String(activity.HabilitacionInmediata).toUpperCase() !== "SI" || blocking) {
+  if (
+    String(activity.HabilitacionInmediata).toUpperCase() !== "SI" ||
+    blocking
+  ) {
     row.Estado = "EN_REVISION";
+    row.sync = normalizeDemoSync(row.sync);
     row.syncPending = true;
     markDemoSyncPending(store);
     saveDemoStore(store);
@@ -546,24 +769,37 @@ function finalizeLocalHabilitacion({ IDHabilitacion }) {
   row.NumeroHabilitacion = `HR-DEMO-2026-${String(Math.floor(Math.random() * 1000000)).padStart(6, "0")}`;
   row.Estado = "HABILITADO_PROVISORIO";
   row.FechaHabilitacion = new Date().toISOString();
+  row.sync = normalizeDemoSync(row.sync);
+  row.sync.finalized = false;
   row.syncPending = true;
   markDemoSyncPending(store);
   saveDemoStore(store);
   syncPendingDemoData();
 
-  return { ok: true, habilitado: true, NumeroHabilitacion: row.NumeroHabilitacion };
+  return {
+    ok: true,
+    habilitado: true,
+    NumeroHabilitacion: row.NumeroHabilitacion,
+  };
 }
 
-function registerLocalVerification({ IDHabilitacion, Resultado, Observaciones }) {
+function registerLocalVerification({
+  IDHabilitacion,
+  Resultado,
+  Observaciones,
+}) {
   const store = loadDemoStore();
-  const row = store.habilitaciones.find((item) => item.IDHabilitacion === IDHabilitacion);
+  const row = store.habilitaciones.find(
+    (item) => item.IDHabilitacion === IDHabilitacion,
+  );
   if (!row) return { ok: false, error: "No se encontró el trámite local." };
 
-  const EstadoPosterior = Resultado === "CONFORME"
-    ? "VERIFICADO"
-    : Resultado === "OBSERVADO"
-      ? "OBSERVADO"
-      : "SUSPENDIDO";
+  const EstadoPosterior =
+    Resultado === "CONFORME"
+      ? "VERIFICADO"
+      : Resultado === "OBSERVADO"
+        ? "OBSERVADO"
+        : "SUSPENDIDO";
 
   row.Estado = EstadoPosterior;
   row.syncPending = true;
@@ -574,8 +810,8 @@ function registerLocalVerification({ IDHabilitacion, Resultado, Observaciones })
       Inspector: "Inspector Demo",
       Resultado,
       Observaciones,
-      syncPending: true
-    }
+      syncPending: true,
+    },
   ];
   markDemoSyncPending(store);
   saveDemoStore(store);
@@ -584,27 +820,51 @@ function registerLocalVerification({ IDHabilitacion, Resultado, Observaciones })
 }
 
 function serverIdForLocal(row) {
-  return row?.IDHabilitacionReal || row?.serverIDHabilitacion || "";
+  return row?.serverIDHabilitacion || row?.IDHabilitacionReal || "";
+}
+
+function demoRowHasPendingSync(row, store) {
+  const sync = normalizeDemoSync(row.sync);
+  const docs = store.documentos[row.IDHabilitacion] || [];
+  const hasPendingDocs = docs.some(
+    (doc) => sync.documents[documentSyncKey(doc)] !== true,
+  );
+  const hasDDJJ = (store.respuestas[row.IDHabilitacion] || []).length > 0;
+  const needsFinalize =
+    row.NumeroHabilitacion && row.Estado === "HABILITADO_PROVISORIO";
+
+  return (
+    !sync.created ||
+    hasPendingDocs ||
+    (hasDDJJ && !sync.ddjj) ||
+    (needsFinalize && !sync.finalized)
+  );
 }
 
 function demoRowsForPanel(serverRows = []) {
   const store = loadDemoStore();
-  const serverIds = new Set(serverRows.map((row) => String(row.IDHabilitacion)));
+  const serverIds = new Set(
+    serverRows.map((row) => String(row.IDHabilitacion)),
+  );
   const localRows = store.habilitaciones
-    .filter((row) => !serverIdForLocal(row) || !serverIds.has(String(serverIdForLocal(row))))
+    .filter(
+      (row) =>
+        !serverIdForLocal(row) || !serverIds.has(String(serverIdForLocal(row))),
+    )
     .map((row) => ({ ...row, source: row.source || "LOCAL_DEMO" }));
 
   return [
     ...serverRows.map((row) => ({ ...row, source: "SERVER" })),
-    ...localRows
+    ...localRows,
   ];
 }
 
 function findLocalHabilitacion(id) {
   const store = loadDemoStore();
-  const habilitacion = store.habilitaciones.find((row) =>
-    String(row.IDHabilitacion) === String(id) ||
-    String(serverIdForLocal(row)) === String(id)
+  const habilitacion = store.habilitaciones.find(
+    (row) =>
+      String(row.IDHabilitacion) === String(id) ||
+      String(serverIdForLocal(row)) === String(id),
   );
   if (!habilitacion) return null;
   const titular = store.titulares[habilitacion.IDTitular] || {};
@@ -615,18 +875,32 @@ function findLocalHabilitacion(id) {
     actividad,
     documentos: store.documentos[habilitacion.IDHabilitacion] || [],
     respuestas: store.respuestas[habilitacion.IDHabilitacion] || [],
-    verificaciones: store.verificaciones[habilitacion.IDHabilitacion] || []
+    verificaciones: store.verificaciones[habilitacion.IDHabilitacion] || [],
   };
 }
 
 function syncPendingDemoData() {
   if (!DEMO_FAST_MODE) return;
+  if (demoSyncRunning) return;
+  demoSyncRunning = true;
 
   setTimeout(async () => {
     const store = loadDemoStore();
     try {
-      for (const row of store.habilitaciones.filter((item) => item.syncPending && !item.seed)) {
-        if (!serverIdForLocal(row)) {
+      for (const row of store.habilitaciones.filter((item) => !item.seed)) {
+        row.sync = normalizeDemoSync(row.sync);
+
+        if (!demoRowHasPendingSync(row, store)) {
+          row.syncPending = false;
+          continue;
+        }
+
+        if (!row.serverIDHabilitacion && !row.sync.created) {
+          if (row.sync.creating) continue;
+          row.sync.creating = true;
+          row.syncPending = true;
+          saveDemoStore(store);
+
           const titular = store.titulares[row.IDTitular] || {};
           const createResult = await apiPost({
             action: "crearHabilitacion",
@@ -635,66 +909,113 @@ function syncPendingDemoData() {
               NombreFantasia: row.NombreFantasia,
               SuperficieM2: row.SuperficieM2,
               DomicilioLocal: row.DomicilioLocal,
-              IDActividad: row.IDActividad
-            }
+              IDActividad: row.IDActividad,
+            },
           });
           if (createResult.ok) {
-            row.IDHabilitacionReal = createResult.IDHabilitacion;
-            row.IDTitularReal = createResult.IDTitular;
+            row.serverIDHabilitacion =
+              createResult.IDHabilitacion || row.serverIDHabilitacion;
+            row.serverIDTitular = createResult.IDTitular || row.serverIDTitular;
+            row.sync.created = true;
+            row.sync.creating = false;
+            saveDemoStore(store);
           } else {
-            throw new Error(createResult.error || "No se pudo sincronizar la creación local.");
+            row.sync.creating = false;
+            saveDemoStore(store);
+            throw new Error(
+              createResult.error || "No se pudo sincronizar la creación local.",
+            );
           }
         }
 
-        const targetId = serverIdForLocal(row) || row.IDHabilitacion;
+        const targetId = row.serverIDHabilitacion;
+        if (!targetId) continue;
+
         for (const doc of store.documentos[row.IDHabilitacion] || []) {
-          if (!doc.syncPending) continue;
+          const key = documentSyncKey(doc);
+          if (row.sync.documents[key] === true) continue;
           const docResult = await apiPost({
             action: "registrarDocumento",
             IDHabilitacion: targetId,
             TipoDocumento: doc.TipoDocumento,
             NombreArchivo: doc.NombreArchivo,
-            URL_o_FileID: doc.URL_o_FileID
+            URL_o_FileID: doc.URL_o_FileID,
           });
-          if (docResult.ok) doc.syncPending = false;
-          else throw new Error(docResult.error || "No se pudo sincronizar un documento local.");
-        }
-
-        if ((store.respuestas[row.IDHabilitacion] || []).some((item) => item.syncPending)) {
-          const ddjjResult = await apiPost({
-            action: "guardarDDJJ",
-            IDHabilitacion: targetId,
-            respuestas: store.respuestas[row.IDHabilitacion].map(({ IDPregunta, Respuesta, Observacion }) => ({
-              IDPregunta,
-              Respuesta,
-              Observacion: Observacion || ""
-            }))
-          });
-          if (ddjjResult.ok) {
-            store.respuestas[row.IDHabilitacion] = store.respuestas[row.IDHabilitacion].map((item) => ({
-              ...item,
-              syncPending: false
-            }));
+          if (docResult.ok) {
+            row.sync.documents[key] = true;
+            saveDemoStore(store);
           } else {
-            throw new Error(ddjjResult.error || "No se pudo sincronizar la DDJJ local.");
+            throw new Error(
+              docResult.error || "No se pudo sincronizar un documento local.",
+            );
           }
         }
 
-        if (row.NumeroHabilitacion && row.Estado === "HABILITADO_PROVISORIO") {
-          const finalizeResult = await apiPost({ action: "finalizarHabilitacion", IDHabilitacion: targetId });
-          if (!finalizeResult.ok) throw new Error(finalizeResult.error || "No se pudo sincronizar la finalización local.");
+        if (
+          (store.respuestas[row.IDHabilitacion] || []).length &&
+          !row.sync.ddjj
+        ) {
+          const ddjjResult = await apiPost({
+            action: "guardarDDJJ",
+            IDHabilitacion: targetId,
+            respuestas: store.respuestas[row.IDHabilitacion].map(
+              ({ IDPregunta, Respuesta, Observacion }) => ({
+                IDPregunta,
+                Respuesta,
+                Observacion: Observacion || "",
+              }),
+            ),
+          });
+          if (ddjjResult.ok) {
+            row.sync.ddjj = true;
+            saveDemoStore(store);
+          } else {
+            throw new Error(
+              ddjjResult.error || "No se pudo sincronizar la DDJJ local.",
+            );
+          }
         }
 
-        row.syncPending = false;
+        if (
+          row.NumeroHabilitacion &&
+          row.Estado === "HABILITADO_PROVISORIO" &&
+          !row.sync.finalized
+        ) {
+          const finalizeResult = await apiPost({
+            action: "finalizarHabilitacion",
+            IDHabilitacion: targetId,
+          });
+          if (finalizeResult.ok) {
+            row.sync.finalized = true;
+            row.serverNumeroHabilitacion =
+              finalizeResult.NumeroHabilitacion || row.serverNumeroHabilitacion;
+            saveDemoStore(store);
+          } else {
+            throw new Error(
+              finalizeResult.error ||
+                "No se pudo sincronizar la finalización local.",
+            );
+          }
+        }
+
+        row.syncPending = demoRowHasPendingSync(row, store);
       }
 
-      store.syncPending = store.habilitaciones.some((row) => row.syncPending);
+      store.syncPending = store.habilitaciones.some(
+        (row) => !row.seed && demoRowHasPendingSync(row, store),
+      );
       saveDemoStore(store);
       if (!store.syncPending) setApiStatus(true, "Modo demo");
     } catch (error) {
+      store.habilitaciones.forEach((row) => {
+        row.sync = normalizeDemoSync(row.sync);
+        row.sync.creating = false;
+      });
       markDemoSyncPending(store);
       saveDemoStore(store);
       demoWarn("Sincronización demo pendiente.", error);
+    } finally {
+      demoSyncRunning = false;
     }
   }, 0);
 }
@@ -729,12 +1050,18 @@ async function bootstrap() {
 
   apiGet("bootstrap")
     .then((data) => {
-      state.bootstrap.actividades = data.actividades || DEMO_BOOTSTRAP.actividades;
+      state.bootstrap.actividades =
+        data.actividades || DEMO_BOOTSTRAP.actividades;
       state.bootstrap.requisitos = data.requisitos || DEMO_BOOTSTRAP.requisitos;
       state.bootstrap.preguntas = data.preguntas || DEMO_BOOTSTRAP.preguntas;
       setApiStatus(true, "Backend sincronizado");
     })
-    .catch((error) => demoWarn("Bootstrap remoto no disponible. Continúa DEMO_BOOTSTRAP.", error));
+    .catch((error) =>
+      demoWarn(
+        "Bootstrap remoto no disponible. Continúa DEMO_BOOTSTRAP.",
+        error,
+      ),
+    );
 }
 
 function bindGlobalEvents() {
@@ -811,17 +1138,25 @@ function initTutorial() {
   let touchStartX = 0;
   let touchStartY = 0;
 
-  track.addEventListener("touchstart", (event) => {
-    touchStartX = event.changedTouches[0].screenX;
-    touchStartY = event.changedTouches[0].screenY;
-  }, { passive: true });
+  track.addEventListener(
+    "touchstart",
+    (event) => {
+      touchStartX = event.changedTouches[0].screenX;
+      touchStartY = event.changedTouches[0].screenY;
+    },
+    { passive: true },
+  );
 
-  track.addEventListener("touchend", (event) => {
-    const dx = event.changedTouches[0].screenX - touchStartX;
-    const dy = event.changedTouches[0].screenY - touchStartY;
-    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) return;
-    dx < 0 ? tutorialNext() : tutorialPrev();
-  }, { passive: true });
+  track.addEventListener(
+    "touchend",
+    (event) => {
+      const dx = event.changedTouches[0].screenX - touchStartX;
+      const dy = event.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) return;
+      dx < 0 ? tutorialNext() : tutorialPrev();
+    },
+    { passive: true },
+  );
 
   $("#tutorialNext").addEventListener("click", tutorialNext);
   $("#tutorialPrev").addEventListener("click", tutorialPrev);
@@ -893,7 +1228,7 @@ function resetWizardState() {
     titular: {},
     local: {},
     files: {},
-    respuestas: {}
+    respuestas: {},
   };
   state.certificate = null;
 }
@@ -916,8 +1251,10 @@ function renderWizard() {
 
   bindWizardStepEvents();
 
-  $("#wizardBack").style.visibility = state.wizardStep === 1 ? "hidden" : "visible";
-  $("#wizardNext").textContent = state.wizardStep === 5 ? "Habilitar ahora" : "Continuar";
+  $("#wizardBack").style.visibility =
+    state.wizardStep === 1 ? "hidden" : "visible";
+  $("#wizardNext").textContent =
+    state.wizardStep === 5 ? "Habilitar ahora" : "Continuar";
   syncWizardNextState();
 }
 
@@ -926,19 +1263,21 @@ function renderWizardSidebar() {
   const current = WIZARD_STEPS[index];
   const percent = state.wizardStep * 20;
   const circumference = 270;
-  const offset = circumference - (circumference * percent / 100);
+  const offset = circumference - (circumference * percent) / 100;
 
   $("#progressPercent").textContent = `${percent}%`;
   $("#progressRingValue").style.strokeDashoffset = offset;
   $("#sideTitle").textContent = current.title;
   $("#sideHint").textContent = current.hint;
 
-  $("#wizardSteps").innerHTML = WIZARD_STEPS.map((step) => `
+  $("#wizardSteps").innerHTML = WIZARD_STEPS.map(
+    (step) => `
     <div class="step-item ${step.n === state.wizardStep ? "active" : ""} ${step.n < state.wizardStep ? "done" : ""}">
       <i>${step.n < state.wizardStep ? "✓" : step.n}</i>
       <span>${escapeHtml(step.title)}</span>
     </div>
-  `).join("");
+  `,
+  ).join("");
 }
 
 function wizardTitle(number, title, text) {
@@ -967,7 +1306,10 @@ function renderStepActivity() {
     </div>
 
     <div class="activity-grid">
-      ${actividades.map((activity) => `
+      ${
+        actividades
+          .map(
+            (activity) => `
         <button class="activity-card ${state.selectedActivity?.IDActividad === activity.IDActividad ? "selected" : ""}"
                 type="button"
                 data-activity-id="${escapeHtml(activity.IDActividad)}">
@@ -978,7 +1320,11 @@ function renderStepActivity() {
           </span>
           <span class="risk-pill ${escapeHtml(activity.NivelRiesgo)}">${escapeHtml(activity.NivelRiesgo)}</span>
         </button>
-      `).join("") || `<div class="info-strip amber">No se pudieron cargar actividades desde la API.</div>`}
+      `,
+          )
+          .join("") ||
+        `<div class="info-strip amber">No se pudieron cargar actividades desde la API.</div>`
+      }
     </div>
   `;
 }
@@ -1040,16 +1386,19 @@ function field(label, name, value = "", type = "text", placeholder = "") {
 
 function requirementsForSelectedActivity() {
   if (!state.selectedActivity) return [];
-  return state.bootstrap.requisitos.filter((r) =>
-    String(r.IDActividad) === String(state.selectedActivity.IDActividad) &&
-    String(r.Obligatorio).toUpperCase() === "SI" &&
-    String(r.Momento).toUpperCase() === "INICIO"
+  return state.bootstrap.requisitos.filter(
+    (r) =>
+      String(r.IDActividad) === String(state.selectedActivity.IDActividad) &&
+      String(r.Obligatorio).toUpperCase() === "SI" &&
+      String(r.Momento).toUpperCase() === "INICIO",
   );
 }
 
 function documentRequirementsComplete() {
   const requirements = requirementsForSelectedActivity();
-  return requirements.every((req) => Boolean(state.form.files[req.TipoDocumento]));
+  return requirements.every((req) =>
+    Boolean(state.form.files[req.TipoDocumento]),
+  );
 }
 
 function syncWizardNextState() {
@@ -1060,14 +1409,18 @@ function syncWizardNextState() {
 
 function renderStepDocuments() {
   const requirements = requirementsForSelectedActivity();
-  const loaded = requirements.filter((req) => state.form.files[req.TipoDocumento]).length;
+  const loaded = requirements.filter(
+    (req) => state.form.files[req.TipoDocumento],
+  ).length;
   const total = requirements.length;
   const progress = total ? Math.round((loaded / total) * 100) : 100;
 
   return `
     ${wizardTitle(3, "Subí tu documentación", "Te pedimos únicamente los documentos necesarios para tu actividad.")}
 
-    ${requirements.length ? `
+    ${
+      requirements.length
+        ? `
       <section class="docs-progress-card" aria-label="Documentación necesaria">
         <div class="docs-progress-head">
           <div>
@@ -1080,39 +1433,50 @@ function renderStepDocuments() {
           <span style="width:${progress}%"></span>
         </div>
         <div class="docs-checklist">
-          ${requirements.map((req) => {
-            const done = Boolean(state.form.files[req.TipoDocumento]);
-            return `
+          ${requirements
+            .map((req) => {
+              const done = Boolean(state.form.files[req.TipoDocumento]);
+              return `
               <div class="${done ? "done" : ""}">
                 <span>${done ? "✓" : "○"}</span>
                 ${escapeHtml(req.TipoDocumento)}
               </div>
             `;
-          }).join("")}
+            })
+            .join("")}
         </div>
       </section>
-    ` : ""}
+    `
+        : ""
+    }
 
     <div class="docs-list">
-      ${requirements.length ? requirements.map((req) => {
-        const file = state.form.files[req.TipoDocumento];
-        return `
+      ${
+        requirements.length
+          ? requirements
+              .map((req) => {
+                const file = state.form.files[req.TipoDocumento];
+                return `
           <article class="doc-row ${file ? "uploaded" : ""}">
             <span class="doc-icon">▣</span>
             <div class="doc-copy">
               <strong>${escapeHtml(req.TipoDocumento)}</strong>
               <small>${escapeHtml(req.Descripcion || "Documento requerido")}</small>
-              ${file ? `
+              ${
+                file
+                  ? `
                 <div class="doc-upload-state">
                   <b>✓ Documento cargado</b>
                   <span>${escapeHtml(file.name)}</span>
                 </div>
-              ` : `
+              `
+                  : `
                 <div class="doc-upload-state pending">
                   <b>Documento pendiente</b>
                   <span>Seleccioná un archivo para continuar.</span>
                 </div>
-              `}
+              `
+              }
             </div>
             <div class="file-control">
               <input type="file"
@@ -1125,15 +1489,20 @@ function renderStepDocuments() {
             </div>
           </article>
         `;
-      }).join("") : `
+              })
+              .join("")
+          : `
         <div class="info-strip green">
           <strong>✓</strong>
           <span>Esta actividad no requiere documentación adicional en esta etapa.</span>
         </div>
-      `}
+      `
+      }
     </div>
 
-    ${requirements.length ? `
+    ${
+      requirements.length
+        ? `
       <div class="info-strip">
         <strong>i</strong>
         <span>
@@ -1141,7 +1510,9 @@ function renderStepDocuments() {
           Más adelante conectaremos la carga real a Google Drive.
         </span>
       </div>
-    ` : ""}
+    `
+        : ""
+    }
   `;
 }
 
@@ -1153,8 +1524,10 @@ function questionsForSelectedActivity() {
   return state.bootstrap.preguntas
     .filter((q) => {
       if (String(q.Activa).toUpperCase() !== "SI") return false;
-      return String(q.AplicaCategoria).toUpperCase() === "TODAS" ||
-        String(q.AplicaCategoria).toLowerCase() === category;
+      return (
+        String(q.AplicaCategoria).toUpperCase() === "TODAS" ||
+        String(q.AplicaCategoria).toLowerCase() === category
+      );
     })
     .sort((a, b) => Number(a.Orden || 0) - Number(b.Orden || 0));
 }
@@ -1174,9 +1547,10 @@ function renderStepQuestions() {
     </div>
 
     <div class="questions-list">
-      ${questions.map((q) => {
-        const selected = state.form.respuestas[q.IDPregunta] || "";
-        return `
+      ${questions
+        .map((q) => {
+          const selected = state.form.respuestas[q.IDPregunta] || "";
+          return `
           <article class="question-card">
             <h4>${escapeHtml(q.TextoPregunta)}</h4>
             <div class="segmented">
@@ -1195,7 +1569,8 @@ function renderStepQuestions() {
             </div>
           </article>
         `;
-      }).join("")}
+        })
+        .join("")}
     </div>
   `;
 }
@@ -1255,8 +1630,12 @@ function bindWizardStepEvents() {
     $$("[data-activity-id]").forEach((button) => {
       button.addEventListener("click", () => {
         const id = button.dataset.activityId;
-        state.selectedActivity = state.bootstrap.actividades.find((a) => String(a.IDActividad) === String(id));
-        $$(".activity-card").forEach((card) => card.classList.remove("selected"));
+        state.selectedActivity = state.bootstrap.actividades.find(
+          (a) => String(a.IDActividad) === String(id),
+        );
+        $$(".activity-card").forEach((card) =>
+          card.classList.remove("selected"),
+        );
         button.classList.add("selected");
       });
     });
@@ -1274,7 +1653,7 @@ function bindWizardStepEvents() {
               IDHabilitacion: state.currentHabilitacionId,
               TipoDocumento: type,
               NombreArchivo: file.name,
-              URL_o_FileID: `demo://seleccionado/${file.name}`
+              URL_o_FileID: `demo://seleccionado/${file.name}`,
             });
           }
         }
@@ -1299,14 +1678,14 @@ function collectDataForm() {
     CUIT: normalize($("#CUIT")?.value),
     Email: normalize($("#Email")?.value),
     Telefono: normalize($("#Telefono")?.value),
-    DomicilioReal: normalize($("#DomicilioReal")?.value)
+    DomicilioReal: normalize($("#DomicilioReal")?.value),
   };
 
   state.form.local = {
     NombreFantasia: normalize($("#NombreFantasia")?.value),
     SuperficieM2: normalize($("#SuperficieM2")?.value),
     DomicilioLocal: normalize($("#DomicilioLocal")?.value),
-    IDActividad: state.selectedActivity?.IDActividad || ""
+    IDActividad: state.selectedActivity?.IDActividad || "",
   };
 }
 
@@ -1324,7 +1703,7 @@ function validateDataForm() {
     t.DomicilioReal,
     l.NombreFantasia,
     l.SuperficieM2,
-    l.DomicilioLocal
+    l.DomicilioLocal,
   ];
 
   if (required.some((value) => !value)) {
@@ -1372,10 +1751,11 @@ async function wizardNext() {
       const result = await apiPost({
         action: "crearHabilitacion",
         titular: state.form.titular,
-        local: state.form.local
+        local: state.form.local,
       });
 
-      if (!result.ok) throw new Error(result.error || "No se pudo crear el trámite.");
+      if (!result.ok)
+        throw new Error(result.error || "No se pudo crear el trámite.");
 
       state.currentHabilitacionId = result.IDHabilitacion;
       state.currentTitularId = result.IDTitular;
@@ -1394,10 +1774,15 @@ async function wizardNext() {
 
   if (state.wizardStep === 3) {
     const requirements = requirementsForSelectedActivity();
-    const missing = requirements.filter((req) => !state.form.files[req.TipoDocumento]);
+    const missing = requirements.filter(
+      (req) => !state.form.files[req.TipoDocumento],
+    );
 
     if (missing.length) {
-      showToast(`Falta seleccionar: ${missing.map((r) => r.TipoDocumento).join(", ")}`, "error");
+      showToast(
+        `Falta seleccionar: ${missing.map((r) => r.TipoDocumento).join(", ")}`,
+        "error",
+      );
       return;
     }
 
@@ -1408,7 +1793,7 @@ async function wizardNext() {
           IDHabilitacion: state.currentHabilitacionId,
           TipoDocumento: req.TipoDocumento,
           NombreArchivo: file?.name || "",
-          URL_o_FileID: `demo://seleccionado/${file?.name || "sin-archivo"}`
+          URL_o_FileID: `demo://seleccionado/${file?.name || "sin-archivo"}`,
         });
       }
       state.wizardStep = 4;
@@ -1428,10 +1813,13 @@ async function wizardNext() {
           IDHabilitacion: state.currentHabilitacionId,
           TipoDocumento: req.TipoDocumento,
           NombreArchivo: file?.name || "",
-          URL_o_FileID: `demo://seleccionado/${file?.name || "sin-archivo"}`
+          URL_o_FileID: `demo://seleccionado/${file?.name || "sin-archivo"}`,
         });
 
-        if (!result.ok) throw new Error(result.error || `No se pudo registrar ${req.TipoDocumento}.`);
+        if (!result.ok)
+          throw new Error(
+            result.error || `No se pudo registrar ${req.TipoDocumento}.`,
+          );
       }
 
       state.wizardStep = 4;
@@ -1449,10 +1837,15 @@ async function wizardNext() {
 
   if (state.wizardStep === 4) {
     const questions = questionsForSelectedActivity();
-    const missing = questions.filter((q) => !state.form.respuestas[q.IDPregunta]);
+    const missing = questions.filter(
+      (q) => !state.form.respuestas[q.IDPregunta],
+    );
 
     if (missing.length) {
-      showToast("Respondé todas las preguntas de la declaración jurada.", "error");
+      showToast(
+        "Respondé todas las preguntas de la declaración jurada.",
+        "error",
+      );
       return;
     }
 
@@ -1462,8 +1855,8 @@ async function wizardNext() {
         respuestas: questions.map((q) => ({
           IDPregunta: q.IDPregunta,
           Respuesta: state.form.respuestas[q.IDPregunta],
-          Observacion: ""
-        }))
+          Observacion: "",
+        })),
       });
       state.wizardStep = 5;
       renderWizard();
@@ -1480,11 +1873,12 @@ async function wizardNext() {
         respuestas: questions.map((q) => ({
           IDPregunta: q.IDPregunta,
           Respuesta: state.form.respuestas[q.IDPregunta],
-          Observacion: ""
-        }))
+          Observacion: "",
+        })),
       });
 
-      if (!result.ok) throw new Error(result.error || "No se pudo guardar la DDJJ.");
+      if (!result.ok)
+        throw new Error(result.error || "No se pudo guardar la DDJJ.");
 
       state.wizardStep = 5;
       renderWizard();
@@ -1506,12 +1900,15 @@ async function wizardNext() {
 
     if (DEMO_FAST_MODE) {
       const result = finalizeLocalHabilitacion({
-        IDHabilitacion: state.currentHabilitacionId
+        IDHabilitacion: state.currentHabilitacionId,
       });
 
       if (!result.ok) {
         if (result.tipo === "DOCUMENTACION_INCOMPLETA") {
-          showToast(`Falta documentación: ${(result.faltantes || []).join(", ")}`, "error");
+          showToast(
+            `Falta documentación: ${(result.faltantes || []).join(", ")}`,
+            "error",
+          );
           return;
         }
         if (result.tipo === "DDJJ_INCOMPLETA") {
@@ -1542,7 +1939,7 @@ async function wizardNext() {
         titular: state.form.titular.NombreApellido,
         negocio: state.form.local.NombreFantasia,
         actividad: state.selectedActivity?.Actividad,
-        domicilio: state.form.local.DomicilioLocal
+        domicilio: state.form.local.DomicilioLocal,
       };
 
       renderCertificate();
@@ -1556,12 +1953,14 @@ async function wizardNext() {
     try {
       const result = await apiPost({
         action: "finalizarHabilitacion",
-        IDHabilitacion: state.currentHabilitacionId
+        IDHabilitacion: state.currentHabilitacionId,
       });
 
       if (!result.ok) {
         if (result.tipo === "DOCUMENTACION_INCOMPLETA") {
-          throw new Error(`Falta documentación: ${(result.faltantes || []).join(", ")}`);
+          throw new Error(
+            `Falta documentación: ${(result.faltantes || []).join(", ")}`,
+          );
         }
         if (result.tipo === "DDJJ_INCOMPLETA") {
           throw new Error("La declaración jurada está incompleta.");
@@ -1589,7 +1988,7 @@ async function wizardNext() {
         titular: state.form.titular.NombreApellido,
         negocio: state.form.local.NombreFantasia,
         actividad: state.selectedActivity?.Actividad,
-        domicilio: state.form.local.DomicilioLocal
+        domicilio: state.form.local.DomicilioLocal,
       };
 
       renderCertificate();
@@ -1610,7 +2009,10 @@ function wizardBack() {
   // Una vez creado el expediente no volvemos a los datos para evitar duplicar
   // titulares/trámites en esta demo simple.
   if (state.wizardStep === 3 && state.currentHabilitacionId) {
-    showToast("El expediente ya fue creado. En esta demo continuá con el checklist.", "error");
+    showToast(
+      "El expediente ya fue creado. En esta demo continuá con el checklist.",
+      "error",
+    );
     return;
   }
 
@@ -1641,7 +2043,7 @@ function renderFakeQr(seed) {
 
   let hash = 0;
   for (const char of String(seed)) {
-    hash = ((hash << 5) - hash) + char.charCodeAt(0);
+    hash = (hash << 5) - hash + char.charCodeAt(0);
     hash |= 0;
   }
 
@@ -1651,13 +2053,19 @@ function renderFakeQr(seed) {
     const zones = [
       [0, 0],
       [size - 5, 0],
-      [0, size - 5]
+      [0, size - 5],
     ];
     for (const [sx, sy] of zones) {
       if (x >= sx && x < sx + 5 && y >= sy && y < sy + 5) {
         const lx = x - sx;
         const ly = y - sy;
-        return lx === 0 || ly === 0 || lx === 4 || ly === 4 || (lx >= 2 && lx <= 2 && ly >= 2 && ly <= 2);
+        return (
+          lx === 0 ||
+          ly === 0 ||
+          lx === 4 ||
+          ly === 4 ||
+          (lx >= 2 && lx <= 2 && ly >= 2 && ly <= 2)
+        );
       }
     }
     return null;
@@ -1667,8 +2075,10 @@ function renderFakeQr(seed) {
     for (let x = 0; x < size; x++) {
       const cell = document.createElement("i");
       const forced = finder(x, y);
-      const randomish = Math.abs(Math.sin((x + 1) * 17.13 + (y + 1) * 31.7 + hash)) > .47;
-      if (forced === true || (forced === null && randomish)) cell.classList.add("on");
+      const randomish =
+        Math.abs(Math.sin((x + 1) * 17.13 + (y + 1) * 31.7 + hash)) > 0.47;
+      if (forced === true || (forced === null && randomish))
+        cell.classList.add("on");
       grid.appendChild(cell);
     }
   }
@@ -1707,22 +2117,34 @@ async function loadMunicipal() {
     renderStatusFilters();
     renderMunicipalTable();
 
-    if (state.municipal.selectedId && !state.municipal.habilitaciones.some((row) =>
-      String(row.IDHabilitacion) === String(state.municipal.selectedId)
-    )) {
+    if (
+      state.municipal.selectedId &&
+      !state.municipal.habilitaciones.some(
+        (row) =>
+          String(row.IDHabilitacion) === String(state.municipal.selectedId),
+      )
+    ) {
       state.municipal.selectedId = null;
       renderEmptyMunicipalDetail();
     }
 
     apiGet("habilitaciones")
       .then((data) => {
-        state.municipal.habilitaciones = demoRowsForPanel(data.habilitaciones || []);
+        state.municipal.habilitaciones = demoRowsForPanel(
+          data.habilitaciones || [],
+        );
         renderStatusFilters();
         renderMunicipalTable();
-        if (state.municipal.selectedId) loadExpediente(state.municipal.selectedId);
+        if (state.municipal.selectedId)
+          loadExpediente(state.municipal.selectedId);
         syncPendingDemoData();
       })
-      .catch((error) => demoWarn("Habilitaciones remotas no disponibles. Continúa el panel demo.", error))
+      .catch((error) =>
+        demoWarn(
+          "Habilitaciones remotas no disponibles. Continúa el panel demo.",
+          error,
+        ),
+      )
       .finally(() => setMunicipalRefreshBusy(false));
     return;
   }
@@ -1733,8 +2155,9 @@ async function loadMunicipal() {
 
     if (
       state.municipal.selectedId &&
-      !state.municipal.habilitaciones.some((row) =>
-        String(row.IDHabilitacion) === String(state.municipal.selectedId)
+      !state.municipal.habilitaciones.some(
+        (row) =>
+          String(row.IDHabilitacion) === String(state.municipal.selectedId),
       )
     ) {
       state.municipal.selectedId = null;
@@ -1761,16 +2184,20 @@ function renderStatusFilters() {
     { key: "TODOS", label: "Todos" },
     { key: "HABILITADO_PROVISORIO", label: "Provisorios" },
     { key: "OBSERVADO", label: "Observados" },
-    { key: "VERIFICADO", label: "Verificados" }
+    { key: "VERIFICADO", label: "Verificados" },
   ];
 
-  $("#statusFilters").innerHTML = statuses.map((s) => `
+  $("#statusFilters").innerHTML = statuses
+    .map(
+      (s) => `
     <button class="filter-chip ${state.municipal.filter === s.key ? "active" : ""}"
             type="button"
             data-filter="${s.key}">
       ${s.label}
     </button>
-  `).join("");
+  `,
+    )
+    .join("");
 
   $$("[data-filter]", $("#statusFilters")).forEach((button) => {
     button.addEventListener("click", () => {
@@ -1783,7 +2210,8 @@ function renderStatusFilters() {
 
 function filteredMunicipalRows() {
   return state.municipal.habilitaciones.filter((row) => {
-    const statusOk = state.municipal.filter === "TODOS" ||
+    const statusOk =
+      state.municipal.filter === "TODOS" ||
       String(row.Estado) === state.municipal.filter;
 
     const haystack = [
@@ -1792,10 +2220,13 @@ function filteredMunicipalRows() {
       row.NombreFantasia,
       row.DomicilioLocal,
       row.IDActividad,
-      row.Estado
-    ].join(" ").toLowerCase();
+      row.Estado,
+    ]
+      .join(" ")
+      .toLowerCase();
 
-    const searchOk = !state.municipal.search || haystack.includes(state.municipal.search);
+    const searchOk =
+      !state.municipal.search || haystack.includes(state.municipal.search);
 
     return statusOk && searchOk;
   });
@@ -1823,7 +2254,9 @@ function renderMunicipalTable() {
         </tr>
       </thead>
       <tbody>
-        ${rows.map((row) => `
+        ${rows
+          .map(
+            (row) => `
           <tr data-expediente="${escapeHtml(row.IDHabilitacion)}"
               class="${state.municipal.selectedId === row.IDHabilitacion ? "selected" : ""}">
             <td><strong>${escapeHtml(row.IDHabilitacion)}</strong></td>
@@ -1836,7 +2269,9 @@ function renderMunicipalTable() {
             <td><span class="status-badge ${escapeHtml(row.Estado)}">${escapeHtml(statusLabel(row.Estado))}</span></td>
             <td>›</td>
           </tr>
-        `).join("")}
+        `,
+          )
+          .join("")}
       </tbody>
     </table>
   `;
@@ -1857,13 +2292,15 @@ function statusLabel(status) {
     EN_REVISION: "En revisión",
     OBSERVADO: "Observado",
     VERIFICADO: "Verificado",
-    SUSPENDIDO: "Suspendido"
+    SUSPENDIDO: "Suspendido",
   };
   return map[status] || status || "—";
 }
 
 function documentUrl(doc) {
-  return normalize(doc.URL_o_FileID || doc.URL || doc.FileURL || doc.Link || doc.Enlace);
+  return normalize(
+    doc.URL_o_FileID || doc.URL || doc.FileURL || doc.Link || doc.Enlace,
+  );
 }
 
 function renderMunicipalDocuments(docs) {
@@ -1873,10 +2310,11 @@ function renderMunicipalDocuments(docs) {
 
   return `
     <div class="municipal-doc-list">
-      ${docs.map((doc) => {
-        const url = documentUrl(doc);
-        const isRealUrl = /^https?:\/\//i.test(url);
-        return `
+      ${docs
+        .map((doc) => {
+          const url = documentUrl(doc);
+          const isRealUrl = /^https?:\/\//i.test(url);
+          return `
           <article class="municipal-doc-item">
             <span class="municipal-doc-check">✓</span>
             <div>
@@ -1884,14 +2322,17 @@ function renderMunicipalDocuments(docs) {
               <small>${escapeHtml(doc.NombreArchivo || "Archivo registrado")}</small>
               <div class="municipal-doc-meta">
                 <b>${escapeHtml(doc.EstadoDocumento || "PRESENTADO")}</b>
-                ${isRealUrl
-                  ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Ver documento</a>`
-                  : `<span>Archivo demo</span>`}
+                ${
+                  isRealUrl
+                    ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Ver documento</a>`
+                    : `<span>Archivo demo</span>`
+                }
               </div>
             </div>
           </article>
         `;
-      }).join("")}
+        })
+        .join("")}
     </div>
   `;
 }
@@ -1975,7 +2416,9 @@ function renderExpedienteDetail(data) {
   `;
 
   $$("[data-verify]", $("#municipalDetail")).forEach((button) => {
-    button.addEventListener("click", () => submitVerification(button.dataset.verify));
+    button.addEventListener("click", () =>
+      submitVerification(button.dataset.verify),
+    );
   });
 }
 
@@ -1986,7 +2429,10 @@ async function submitVerification(result) {
   const note = normalize($("#verificationNote")?.value);
 
   if (result !== "CONFORME" && !note) {
-    showToast("Escribí una observación antes de observar o suspender.", "error");
+    showToast(
+      "Escribí una observación antes de observar o suspender.",
+      "error",
+    );
     return;
   }
 
@@ -2012,12 +2458,18 @@ async function submitVerification(result) {
         const response = registerLocalVerification({
           IDHabilitacion: id,
           Resultado: result,
-          Observaciones: note
+          Observaciones: note,
         });
-        if (!response.ok) throw new Error(response.error || "No se pudo registrar la verificación local.");
+        if (!response.ok)
+          throw new Error(
+            response.error || "No se pudo registrar la verificación local.",
+          );
 
         closeModal();
-        showToast(`Estado actualizado a ${response.EstadoPosterior}.`, "success");
+        showToast(
+          `Estado actualizado a ${response.EstadoPosterior}.`,
+          "success",
+        );
         await loadMunicipal();
         await loadExpediente(id);
         return;
@@ -2029,10 +2481,13 @@ async function submitVerification(result) {
         Inspector: "Inspector Demo",
         Resultado: result,
         Observaciones: note,
-        EvidenciaURL: ""
+        EvidenciaURL: "",
       });
 
-      if (!response.ok) throw new Error(response.error || "No se pudo registrar la verificación.");
+      if (!response.ok)
+        throw new Error(
+          response.error || "No se pudo registrar la verificación.",
+        );
 
       closeModal();
       showToast(`Estado actualizado a ${response.EstadoPosterior}.`, "success");
